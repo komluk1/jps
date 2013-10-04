@@ -1,7 +1,9 @@
 package pl.edu.pjwstk;
 
+import edu.pjwstk.jps.ast.IExpression;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggerFactory;
+import pl.edu.pjwstk.ast.binary.BinaryExpression;
 
 /**
  * Hello world!

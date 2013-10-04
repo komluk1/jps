@@ -11,7 +11,7 @@ import edu.pjwstk.jps.visitor.ASTVisitor;
  * Time: 19:54
  * To change this template use File | Settings | File Templates.
  */
-public class BinaryExpression implements IBinaryExpression {
+public abstract class BinaryExpression implements IBinaryExpression {
 
 
     private IExpression leftExpression;
