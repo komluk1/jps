@@ -4,10 +4,12 @@ import edu.pjwstk.jps.ast.IExpression;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import pl.edu.pjwstk.ast.binary.EqualsExpression;
 import pl.edu.pjwstk.ast.binary.GreaterThanExpression;
 import pl.edu.pjwstk.ast.binary.WhereExpression;
 import pl.edu.pjwstk.ast.terminal.IntegerTerminal;
 import pl.edu.pjwstk.ast.terminal.NameTerminal;
+import pl.edu.pjwstk.ast.terminal.StringTerminal;
 import pl.edu.pjwstk.ast.unary.CountExpression;
 
 /**
@@ -76,7 +78,22 @@ public class TestCw1
      */
     public void test4()
     {
-
+        IExpression expression = new WhereExpression(
+               new WhereExpression(
+                       new NameTerminal("firma"),
+                       new EqualsExpression(
+                               new NameTerminal("nazwa"),
+                               new StringTerminal("XYZ")
+                       )
+               ),
+               new WhereExpression(
+                       new NameTerminal("zatrudnia"), // TODO ZAMIENIC NA NAMED BAGA?!
+                       new EqualsExpression(
+                               new NameTerminal("nazwisko"),
+                               new StringTerminal("Kowalski")
+                       )
+               )
+        );
         assertTrue( true );
     }
 }
