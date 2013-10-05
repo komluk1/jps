@@ -2,6 +2,8 @@ package pl.edu.pjwstk.datastore;
 
 import edu.pjwstk.jps.datastore.IOID;
 
+import java.math.BigInteger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Piotr Sukiennik
@@ -9,11 +11,11 @@ import edu.pjwstk.jps.datastore.IOID;
  * Time: 21:52
  * To change this template use File | Settings | File Templates.
  */
-public class OIDObject implements IOID {
+public class LongOID implements IOID, Comparable<LongOID>{
 
     private long identifier;
 
-    public OIDObject(long identifier) {
+    public LongOID(long identifier) {
         this.identifier = identifier;
     }
 
@@ -21,14 +23,15 @@ public class OIDObject implements IOID {
         return identifier;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof OIDObject)) return false;
+        if (!(o instanceof LongOID)) return false;
 
-        OIDObject oidObject = (OIDObject) o;
+        LongOID longOID = (LongOID) o;
 
-        if (identifier != oidObject.identifier) return false;
+        if (identifier != longOID.identifier) return false;
 
         return true;
     }
@@ -36,5 +39,10 @@ public class OIDObject implements IOID {
     @Override
     public int hashCode() {
         return (int) (identifier ^ (identifier >>> 32));
+    }
+
+    @Override
+    public int compareTo(LongOID o) {
+        return Long.compare(this.getIdentifier(),o.getIdentifier());
     }
 }

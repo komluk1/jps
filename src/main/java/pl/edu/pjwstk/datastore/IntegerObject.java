@@ -11,19 +11,10 @@ import edu.pjwstk.jps.datastore.IOID;
  * Time: 21:51
  * To change this template use File | Settings | File Templates.
  */
-public class IntegerObject extends OIDAwareObject implements IIntegerObject {
-    private Integer value;
-
-    public IntegerObject(IOID ioid, Integer value, String name) {
-        super(ioid,name);
-        this.value = value;
+public class IntegerObject extends SingleObject<Integer> implements IIntegerObject {
+    public IntegerObject(IOID ioid,  String name,Integer value) {
+        super(ioid,name,value);
 
     }
-
-    @Override
-    public Integer getValue() {
-        return value;
-    }
-
 
 }

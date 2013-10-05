@@ -13,19 +13,17 @@ import java.util.List;
  * Time: 21:51
  * To change this template use File | Settings | File Templates.
  */
-public class ComplexObject implements IComplexObject {
+public class ComplexObject  extends OIDAwareObject implements IComplexObject {
+    private List<IOID> children;
+    public ComplexObject(IOID ioid, String name,List<IOID> children) {
+        super(ioid, name);
+        this.children=children;
+    }
+
     @Override
     public List<IOID> getChildOIDs() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return children;
     }
 
-    @Override
-    public String getName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
-    @Override
-    public IOID getOID() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

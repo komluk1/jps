@@ -11,19 +11,10 @@ import edu.pjwstk.jps.datastore.IOID;
  * Time: 21:51
  * To change this template use File | Settings | File Templates.
  */
-public class DoubleObject extends OIDAwareObject implements IDoubleObject {
-    private Double value;
+public class DoubleObject extends SingleObject<Double> implements IDoubleObject {
 
-    public DoubleObject(IOID ioid, Double value, String name) {
-        super(ioid,name);
-        this.value = value;
-
+    public DoubleObject(IOID ioid, String name,Double value) {
+        super(ioid,name,value);
     }
-
-    @Override
-    public Double getValue() {
-        return value;
-    }
-
 
 }

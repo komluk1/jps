@@ -11,19 +11,8 @@ import edu.pjwstk.jps.datastore.IStringObject;
  * Time: 21:51
  * To change this template use File | Settings | File Templates.
  */
-public class StringObject extends OIDAwareObject implements IStringObject {
-    private String value;
-
-    public StringObject(IOID ioid, String value, String name) {
-        super(ioid,name);
-        this.value = value;
-
+public class StringObject extends SingleObject<String> implements IStringObject {
+    public StringObject(IOID ioid,  String name,String value) {
+        super(ioid,name,value);
     }
-
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-
 }
