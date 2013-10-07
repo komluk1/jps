@@ -61,7 +61,7 @@ public class TestCw3
        URL url =  getClass().getClassLoader().getResource("TestCw3_test1.xml");
         SBAStore sbaStore = new SBAStore();
         sbaStore.loadXML(url.getPath());
-
+        System.out.println(sbaStore.toString());
         assertTrue(true);
 
     }
