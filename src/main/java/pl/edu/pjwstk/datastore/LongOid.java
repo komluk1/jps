@@ -2,16 +2,7 @@ package pl.edu.pjwstk.datastore;
 
 import edu.pjwstk.jps.datastore.IOID;
 
-import java.math.BigInteger;
-
-/**
- * Created with IntelliJ IDEA.
- * User: Piotr Sukiennik
- * Date: 05.10.13
- * Time: 21:52
- * To change this template use File | Settings | File Templates.
- */
-public class LongOID implements IOID, Comparable<LongOID>{
+public class LongOID implements IOID, Comparable<LongOID> {
 
     private long identifier;
 
@@ -43,7 +34,7 @@ public class LongOID implements IOID, Comparable<LongOID>{
 
     @Override
     public int compareTo(LongOID o) {
-        return Long.compare(this.getIdentifier(),o.getIdentifier());
+        return Long.compare(this.getIdentifier(), o.getIdentifier());
     }
 
     @Override

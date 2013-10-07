@@ -4,13 +4,6 @@ import edu.pjwstk.jps.ast.IExpression;
 import edu.pjwstk.jps.ast.binary.IBinaryExpression;
 import edu.pjwstk.jps.visitor.ASTVisitor;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Piotr Sukiennik
- * Date: 04.10.13
- * Time: 19:54
- * To change this template use File | Settings | File Templates.
- */
 public abstract class BinaryExpression implements IBinaryExpression {
 
 
@@ -23,6 +16,7 @@ public abstract class BinaryExpression implements IBinaryExpression {
         this.leftExpression = leftExpression;
         this.rightExpression = rightExpression;
     }
+
     @Override
     public IExpression getLeftExpression() {
         return this.leftExpression;

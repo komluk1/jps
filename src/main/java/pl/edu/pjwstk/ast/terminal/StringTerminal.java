@@ -1,16 +1,8 @@
 package pl.edu.pjwstk.ast.terminal;
 
-import edu.pjwstk.jps.ast.terminal.IIntegerTerminal;
 import edu.pjwstk.jps.ast.terminal.IStringTerminal;
 import edu.pjwstk.jps.visitor.ASTVisitor;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Piotr Sukiennik
- * Date: 04.10.13
- * Time: 20:15
- * To change this template use File | Settings | File Templates.
- */
 public class StringTerminal implements IStringTerminal {
     private String value;
 

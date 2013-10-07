@@ -8,13 +8,6 @@ import pl.edu.pjwstk.datastore.util.BeanToMap;
 import pl.edu.pjwstk.datastore.util.XMLToMap;
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Piotr Sukiennik
- * Date: 05.10.13
- * Time: 21:51
- * To change this template use File | Settings | File Templates.
- */
 public class SBAStore implements ISBAStore {
 
     private static final Logger logger = Logger.getLogger(SBAStore.class);

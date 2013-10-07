@@ -1,12 +1,5 @@
 package pl.edu.pjwstk.datastore;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Piotr Sukiennik
- * Date: 05.10.13
- * Time: 23:39
- * To change this template use File | Settings | File Templates.
- */
 public class NamedObject {
     private String name;
     private Object object;
