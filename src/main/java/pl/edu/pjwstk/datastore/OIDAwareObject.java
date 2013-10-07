@@ -4,6 +4,7 @@ import edu.pjwstk.jps.datastore.IOID;
 import edu.pjwstk.jps.datastore.ISBAObject;
 
 public abstract class OIDAwareObject implements ISBAObject {
+
     private String name;
     private IOID oid;
 
@@ -16,15 +17,13 @@ public abstract class OIDAwareObject implements ISBAObject {
         this.name = name;
     }
 
-
-
     @Override
     public String getName() {
         return name;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    protected void setOID(IOID ioid){
-        this.oid=ioid;
+    protected void setOID(IOID ioid) {
+        this.oid = ioid;
     }
 
     @Override
