@@ -45,4 +45,9 @@ public class LongOID implements IOID, Comparable<LongOID>{
     public int compareTo(LongOID o) {
         return Long.compare(this.getIdentifier(),o.getIdentifier());
     }
+
+    @Override
+    public String toString() {
+        return Long.toString(identifier);
+    }
 }

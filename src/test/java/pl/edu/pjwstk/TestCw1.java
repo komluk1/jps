@@ -4,12 +4,11 @@ import edu.pjwstk.jps.ast.IExpression;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import pl.edu.pjwstk.ast.binary.EqualsExpression;
-import pl.edu.pjwstk.ast.binary.GreaterThanExpression;
-import pl.edu.pjwstk.ast.binary.WhereExpression;
+import pl.edu.pjwstk.ast.binary.*;
 import pl.edu.pjwstk.ast.terminal.IntegerTerminal;
 import pl.edu.pjwstk.ast.terminal.NameTerminal;
 import pl.edu.pjwstk.ast.terminal.StringTerminal;
+import pl.edu.pjwstk.ast.unary.BagExpression;
 import pl.edu.pjwstk.ast.unary.CountExpression;
 
 /**
@@ -60,6 +59,19 @@ public class TestCw1
     public void test2()
     {
 
+
+        IExpression expression = new WhereExpression(
+                new NameTerminal("firma"),
+                new InExpression(
+                        new NameTerminal("lokalizacja"),
+                        new BagExpression(
+                                new CommaExpression(
+                                        new NameTerminal("Warszawa"),
+                                        new NameTerminal("Łódź")
+                                )
+                        )
+                )
+        );
         assertTrue( true );
     }
 
@@ -68,8 +80,24 @@ public class TestCw1
      */
     public void test3()
     {
-
-
+        IExpression expression =
+               new InExpression(
+                       new BagExpression(
+                               new CommaExpression(
+                                       new IntegerTerminal(1),
+                                       new IntegerTerminal(2)
+                               )
+                       ),
+                       new BagExpression(
+                               new CommaExpression(
+                                       new IntegerTerminal(1),
+                                       new CommaExpression(
+                                               new IntegerTerminal(2),
+                                               new IntegerTerminal(3)
+                                       )
+                               )
+                       )
+                );
         assertTrue( true );
     }
 
