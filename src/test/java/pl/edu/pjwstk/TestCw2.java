@@ -196,7 +196,6 @@ public class TestCw2
 
         System.out.println("TEST 3 - " + qresStack.pop().toString());
 
-
         assertTrue(true);
     }
 
