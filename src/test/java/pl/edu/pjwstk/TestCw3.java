@@ -39,9 +39,6 @@ public class TestCw3
     /**
      * Plik TestCw3_test1.xml
      *
-     *
-     *
-     *
      <i0, baza, {i1, i2}> (ComplexObject)
      <i1, liczbaTestowa, 10> (IntegerObject)
      <i2, osoba, {i3,i4,i5,i6,i7,i11}> (ComplexObject)
