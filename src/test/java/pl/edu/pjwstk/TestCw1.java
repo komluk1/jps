@@ -5,6 +5,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import pl.edu.pjwstk.ast.binary.*;
+import pl.edu.pjwstk.ast.terminal.CollectionTerminal;
 import pl.edu.pjwstk.ast.terminal.IntegerTerminal;
 import pl.edu.pjwstk.ast.terminal.NameTerminal;
 import pl.edu.pjwstk.ast.terminal.StringTerminal;
@@ -60,7 +61,7 @@ public class TestCw1
                 new InExpression(
                         new NameTerminal("lokalizacja"),
                         new BagExpression(
-                                new CommaExpression(
+                                new CollectionTerminal(
                                         new NameTerminal("Warszawa"),
                                         new NameTerminal("Łódź")
                                 )
@@ -77,19 +78,19 @@ public class TestCw1
         IExpression expression =
                 new InExpression(
                         new BagExpression(
-                                new CommaExpression(
+                                new CollectionTerminal(
                                         new IntegerTerminal(1),
                                         new IntegerTerminal(2)
                                 )
+
                         ),
                         new BagExpression(
-                                new CommaExpression(
-                                        new IntegerTerminal(1),
-                                        new CommaExpression(
-                                                new IntegerTerminal(2),
-                                                new IntegerTerminal(3)
-                                        )
+                                new CollectionTerminal(
+                                    new IntegerTerminal(1),
+                                    new IntegerTerminal(2),
+                                    new IntegerTerminal(3)
                                 )
+
                         )
                 );
         assertTrue(true);
