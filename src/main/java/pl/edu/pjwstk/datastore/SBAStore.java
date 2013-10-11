@@ -22,10 +22,10 @@ public class SBAStore implements ISBAStore {
         return data.get(oid);
     }
 
-    //TODO (?) czy na pewno o to chodzi
+    //TODO (?) czy na pewno o to chodzi -> ID BAZY
     @Override
     public IOID getEntryOID() {
-        return ioidGenerator.generateEntry();
+        return ioidGenerator.entryOid();
     }
 
     @Override

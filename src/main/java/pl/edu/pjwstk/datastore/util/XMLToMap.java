@@ -33,7 +33,6 @@ public class XMLToMap {
 
 
     private static Map<String, Object> toParsedMap(Map<String, Object> toParsed) {
-
         Map<String, Object> linkedHashMap = new LinkedHashMap<String, Object>();
         for (Map.Entry<String, Object> toParseEntry : toParsed.entrySet()) {
             if (toParseEntry.getValue() instanceof String) {
@@ -51,7 +50,6 @@ public class XMLToMap {
                 linkedHashMap.put(toParseEntry.getKey(), toParsedMap((Map) toParseEntry.getValue()));
             }
         }
-
         return linkedHashMap;
 
 

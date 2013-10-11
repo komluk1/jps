@@ -7,7 +7,7 @@ public class LongOIDGenerator implements IOIDGenerator {
     private long last = ENTRY_OID;
 
     @Override
-    public synchronized IOID generateEntry() {
+    public synchronized IOID entryOid() {
         return new LongOid(ENTRY_OID);
     }
 

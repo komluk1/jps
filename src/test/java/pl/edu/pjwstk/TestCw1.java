@@ -84,11 +84,12 @@ public class TestCw1
                         ),
                         new BagExpression(
                                 new CommaExpression(
-                                        new IntegerTerminal(1),
                                         new CommaExpression(
-                                                new IntegerTerminal(2),
-                                                new IntegerTerminal(3)
-                                        )
+                                                new IntegerTerminal(1),
+                                                new IntegerTerminal(2)
+                                        ),
+                                        new IntegerTerminal(3)
+
                                 )
                         )
                 );
