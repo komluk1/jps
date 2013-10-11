@@ -10,11 +10,11 @@ public class SequenceResult extends CollectionResult implements ISequenceResult 
 
     private List<ISingleResult> elements = new ArrayList<ISingleResult>();
 
-    protected SequenceResult(List<ISingleResult> list) {
+    public SequenceResult(List<ISingleResult> list) {
         getElements().addAll(list);
     }
 
-    protected SequenceResult() {
+    public SequenceResult() {
 
     }
 

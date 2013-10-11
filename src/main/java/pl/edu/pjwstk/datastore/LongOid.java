@@ -2,11 +2,11 @@ package pl.edu.pjwstk.datastore;
 
 import edu.pjwstk.jps.datastore.IOID;
 
-public class LongOID implements IOID, Comparable<LongOID> {
+public class LongOid implements IOID, Comparable<LongOid> {
 
     private long identifier;
 
-    public LongOID(long identifier) {
+    public LongOid(long identifier) {
         this.identifier = identifier;
     }
 
@@ -18,11 +18,11 @@ public class LongOID implements IOID, Comparable<LongOID> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof LongOID)) return false;
+        if (!(o instanceof LongOid)) return false;
 
-        LongOID longOID = (LongOID) o;
+        LongOid longOid = (LongOid) o;
 
-        if (identifier != longOID.identifier) return false;
+        if (identifier != longOid.identifier) return false;
 
         return true;
     }
@@ -33,7 +33,7 @@ public class LongOID implements IOID, Comparable<LongOID> {
     }
 
     @Override
-    public int compareTo(LongOID o) {
+    public int compareTo(LongOid o) {
         return Long.compare(this.getIdentifier(), o.getIdentifier());
     }
 

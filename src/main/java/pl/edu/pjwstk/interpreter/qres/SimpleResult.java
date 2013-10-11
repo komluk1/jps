@@ -7,15 +7,15 @@ public class SimpleResult<T> extends SingleResult implements ISimpleResult<T> {
 
     private T value;
 
-    protected SimpleResult(IOID ioid){
+    public SimpleResult(IOID ioid){
         super(ioid);
     }
 
-    protected SimpleResult(T value){
+    public SimpleResult(T value){
         this.value = value;
     }
 
-    protected SimpleResult(IOID ioid, T value) {
+    public SimpleResult(IOID ioid, T value) {
         super(ioid);
         this.value = value;
     }
@@ -23,5 +23,11 @@ public class SimpleResult<T> extends SingleResult implements ISimpleResult<T> {
     @Override
     public T getValue() {
         return value;
+    }
+
+
+    @Override
+    public String toString() {
+        return ""+value;
     }
 }

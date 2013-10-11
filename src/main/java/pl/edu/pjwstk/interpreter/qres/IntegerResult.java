@@ -5,15 +5,15 @@ import edu.pjwstk.jps.result.IIntegerResult;
 
 public class IntegerResult extends SimpleResult<Integer> implements IIntegerResult {
 
-    protected IntegerResult(IOID ioid) {
+    public IntegerResult(IOID ioid) {
         super(ioid);
     }
 
-    protected IntegerResult(Integer value) {
+    public IntegerResult(Integer value) {
         super(value);
     }
 
-    protected IntegerResult(IOID ioid, Integer value) {
+    public IntegerResult(IOID ioid, Integer value) {
         super(ioid, value);
     }
 

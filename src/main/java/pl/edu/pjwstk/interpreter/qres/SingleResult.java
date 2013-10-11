@@ -5,11 +5,11 @@ import edu.pjwstk.jps.result.ISingleResult;
 
 public class SingleResult extends AbstractQueryResult implements ISingleResult {
 
-    protected SingleResult(IOID ioid) {
+    public SingleResult(IOID ioid) {
         super(ioid);
     }
 
-    protected SingleResult() {
+    public SingleResult() {
     }
 
 }

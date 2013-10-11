@@ -12,8 +12,13 @@ import pl.edu.pjwstk.ast.terminal.IntegerTerminal;
 import pl.edu.pjwstk.ast.terminal.NameTerminal;
 import pl.edu.pjwstk.ast.terminal.StringTerminal;
 import pl.edu.pjwstk.ast.unary.CountExpression;
-import pl.edu.pjwstk.interpreter.qres.QresStack;
+import pl.edu.pjwstk.interpreter.qres.*;
 import pl.edu.pjwstk.result.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Unit test for simple App.
@@ -61,6 +66,7 @@ public class TestCw2
         IntegerResult minusRes = new IntegerResult(minusLeft.getValue() - minusRight.getValue());
         qres.push(minusRes);
         assertEquals((int)((IntegerResult) qres.pop()).getValue(),3);
+
     }
 
     /**
@@ -73,10 +79,10 @@ public class TestCw2
         qresStack.push(new DoubleResult(2.1));
         ISingleResult resultRight = (ISingleResult) qresStack.pop();
         ISingleResult resultLeft = (ISingleResult) qresStack.pop();
-        qresStack.push(new BagResult(
+        qresStack.push(new BagResult(Arrays.asList(
                 resultLeft,
                 resultRight
-        ));
+        )));
         qresStack.push(new IntegerResult(3));
         qresStack.push(new IntegerResult(4));
         IIntegerResult intResultRight = (IIntegerResult) qresStack.pop();
@@ -87,19 +93,31 @@ public class TestCw2
         qresStack.push(new StringResult("test"));
         ISingleResult rightResultRight = (ISingleResult) qresStack.pop();
         ISingleResult rightResultLeft = (ISingleResult) qresStack.pop();
-        qresStack.push(new BagResult(rightResultLeft,rightResultRight));
+        qresStack.push(new BagResult(Arrays.asList(rightResultLeft,rightResultRight)));
+        IBagResult bagResultRight = (IBagResult) qresStack.pop();
+        IBagResult bagResultLeft = (IBagResult) qresStack.pop();
 
 
-        //TODO OBLICZANIE NOWEGO BAGA Z DWÓCH BAGÓW I WEPCHNIĘCIE NA STACK WYNIKU KARTEZJANA JAKO BAG
+        List<ISingleResult>   listForBag = new ArrayList<ISingleResult>();
+
+        for (ISingleResult singleResultLeft: bagResultLeft.getElements()){
+            for (ISingleResult singleResultRight: bagResultRight.getElements()){
+                listForBag.add(new StructResult(Arrays.asList(singleResultLeft,singleResultRight)));
+            }
+        }
+        qresStack.push(new BagResult(listForBag));
 
         qresStack.push(new StringResult("nazwa"));
 
         qresStack.push(
                 new BinderResult(
                     ((IStringResult) qresStack.pop()).getValue(),
-                     qresStack.pop()  //TUTAJ BAG Z WYNIKIEM KARTEZJANA
+                     qresStack.pop() //BAG
                 )
         );
+
+        System.out.println("TEST 1 - "+qresStack.pop().toString());
+
 
         assertTrue(true);
     }
@@ -114,14 +132,14 @@ public class TestCw2
         qresStack.push(new StringResult("ala"));
         qresStack.push(new StringResult("ma"));
         qresStack.push(new StringResult("kota"));
-        IStringResult kota = (IStringResult) qresStack.pop();
-        IStringResult ma = (IStringResult) qresStack.pop();
-        IStringResult ala = (IStringResult) qresStack.pop();
-        qresStack.push(new BagResult(
+        ISingleResult kota = (IStringResult) qresStack.pop();
+        ISingleResult ma = (IStringResult) qresStack.pop();
+        ISingleResult ala = (IStringResult) qresStack.pop();
+        qresStack.push(new BagResult(Arrays.asList(
                 ala,
                 ma,
                 kota
-        ));
+        )));
         qresStack.push(new IntegerResult(8));
         qresStack.push(new IntegerResult(10));
         IIntegerResult mulRight = (IIntegerResult)qresStack.pop();   //10
@@ -131,30 +149,54 @@ public class TestCw2
         qresStack.push(new BooleanResult(false)); //false
         ISingleResult singleResultRight = (ISingleResult)qresStack.pop(); //BOOL
         ISingleResult singleResultLeft = (ISingleResult)qresStack.pop(); //INT
-        qresStack.push(new BagResult(
-                singleResultLeft,
-                singleResultRight
-        ));
+        qresStack.push(new StructResult(Arrays.asList(singleResultLeft,singleResultRight)));
 
 
-        //TODO OBLICZANIE BAGA I WEPCHNIĘCIE NA STACK WYNIKU JAKO BAG
+        StructResult structResultRight = (StructResult) qresStack.pop();
+        IBagResult bagResultLeft = (IBagResult) qresStack.pop();
+
+        List<ISingleResult>   listForBag = new ArrayList<ISingleResult>();
+
+        for (ISingleResult bagSingleResultLeft: bagResultLeft.getElements()){
+            List<ISingleResult> listForStruct = new ArrayList<ISingleResult>();
+            listForStruct.add(bagSingleResultLeft);
+            listForStruct.addAll(structResultRight.elements());
+
+            listForBag.add(new StructResult(listForStruct));
+        }
+        qresStack.push(new BagResult(listForBag));
 
 
-
-
+        System.out.println("TEST 2 - "+qresStack.pop().toString());
 
 
         assertTrue( true );
     }
 
     /**
-     * (((bag("JPS", "rules")) groupas x), 2.2, true);
+     * (((bag("JPS", "rules")) group as x), 2.2, true);
      */
     public void test3()
     {
-       //TODO
+        QresStack qresStack = new QresStack();
+        qresStack.push(new StringResult("JPS"));
+        qresStack.push(new StringResult("RULES"));
+        ISingleResult stringResultRight = (StringResult)qresStack.pop();
+        ISingleResult stringResultLeft = (StringResult)qresStack.pop();
+        qresStack.push(new BagResult(Arrays.asList(stringResultLeft,stringResultRight)));
+        qresStack.push(new BinderResult("x",qresStack.pop()));
+        qresStack.push(new DoubleResult(2.2));
+        qresStack.push(new BooleanResult(true));
+        ISingleResult singleResultRight =(ISingleResult) qresStack.pop();
+        ISingleResult singleResultCenter =(ISingleResult) qresStack.pop();
+        ISingleResult singleResultLeft = (ISingleResult)qresStack.pop();
 
-        assertTrue( true );
+        qresStack.push(new StructResult(Arrays.asList(singleResultLeft,singleResultCenter,singleResultRight)));
+
+        System.out.println("TEST 3 - "+qresStack.pop().toString());
+
+
+        assertTrue(true);
     }
 
 }

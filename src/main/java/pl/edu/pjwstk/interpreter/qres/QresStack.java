@@ -21,4 +21,14 @@ public class QresStack implements IQResStack {
     public void push(IAbstractQueryResult value) {
         stack.push(value);
     }
+
+
+    @Override
+    public String toString() {
+        String out = "";
+        for (IAbstractQueryResult abstractQueryResult:stack){
+            out+=abstractQueryResult.toString();
+        }
+        return out;
+    }
 }

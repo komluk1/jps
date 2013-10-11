@@ -5,15 +5,15 @@ import edu.pjwstk.jps.result.IStringResult;
 
 public class StringResult extends SimpleResult<String> implements IStringResult {
 
-    protected StringResult(IOID ioid) {
+    public StringResult(IOID ioid) {
         super(ioid);
     }
 
-    protected StringResult(String value) {
+    public StringResult(String value) {
         super(value);
     }
 
-    protected StringResult(IOID ioid, String value) {
+    public StringResult(IOID ioid, String value) {
         super(ioid, value);
     }
 

@@ -9,13 +9,13 @@ public class BinderResult extends SingleResult implements IBinderResult {
     private String name;
     private IAbstractQueryResult value;
 
-    protected BinderResult(IOID ioid, String name, IAbstractQueryResult value) {
+    public BinderResult(IOID ioid, String name, IAbstractQueryResult value) {
         super(ioid);
         this.name = name;
         this.value = value;
     }
 
-    protected BinderResult(String name, IAbstractQueryResult value) {
+    public BinderResult(String name, IAbstractQueryResult value) {
         this.name = name;
         this.value = value;
     }
@@ -33,7 +33,7 @@ public class BinderResult extends SingleResult implements IBinderResult {
     public String toString() {
         return "BinderResult{" +
                 "name=" + getName() +
-                "value=" + getValue() +
+                ", value=" + getValue() +
                 '}';
     }
 }

@@ -11,11 +11,11 @@ public class BagResult extends CollectionResult implements IBagResult {
 
     private Collection<ISingleResult> elements = new ArrayList<ISingleResult>();
 
-    protected BagResult(List<ISingleResult> list) {
+    public BagResult(List<ISingleResult> list) {
         getElements().addAll(list);
     }
 
-    protected BagResult() {
+    public BagResult() {
 
     }
 
@@ -26,8 +26,14 @@ public class BagResult extends CollectionResult implements IBagResult {
 
     // nie wiem jeszcze jak to ma wygladac
     public String toString() {
+        String elements ="";
+        String comma="";
+        for(ISingleResult singleResult: getElements()){
+            elements+=comma+singleResult.toString();
+            comma=",";
+        }
         return "BagResult{" +
-                "elements=" + getElements().toString() +
+                "elements=" + elements +
                 '}';
     }
 }

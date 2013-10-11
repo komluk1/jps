@@ -21,8 +21,15 @@ public class StructResult extends SingleResult implements IStructResult {
 
     // nie wiem jeszcze jak to ma wygladac
     public String toString() {
-        return "StructResult{" +
-                "elements=" + elements().toString() +
+        String elements ="";
+        String comma="";
+        for(ISingleResult singleResult: elements()){
+            elements+=comma+singleResult.toString();
+            comma=",";
+        }
+
+        return   "StructResult{" +
+                "elements=" + elements +
                 '}';
     }
 }

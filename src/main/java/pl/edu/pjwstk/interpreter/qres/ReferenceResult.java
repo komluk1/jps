@@ -5,7 +5,7 @@ import edu.pjwstk.jps.result.IReferenceResult;
 
 public class ReferenceResult extends SingleResult implements IReferenceResult {
 
-    protected ReferenceResult(IOID ioid) {
+    public ReferenceResult(IOID ioid) {
         super(ioid);
     }
 

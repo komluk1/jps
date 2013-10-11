@@ -8,12 +8,12 @@ public class LongOIDGenerator implements IOIDGenerator {
 
     @Override
     public synchronized IOID generateEntry() {
-        return new LongOID(ENTRY_OID);
+        return new LongOid(ENTRY_OID);
     }
 
     @Override
     public synchronized IOID generate() {
 
-        return new LongOID(++last);
+        return new LongOid(++last);
     }
 }
