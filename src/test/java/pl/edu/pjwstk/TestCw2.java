@@ -5,6 +5,7 @@ import edu.pjwstk.jps.result.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import pl.edu.pjwstk.ast.auxname.GroupAsExpression;
 import pl.edu.pjwstk.ast.binary.EqualsExpression;
 import pl.edu.pjwstk.ast.binary.GreaterThanExpression;
 import pl.edu.pjwstk.ast.binary.WhereExpression;
@@ -167,7 +168,7 @@ public class TestCw2
         qresStack.push(new BagResult(listForBag));
 
 
-        System.out.println("TEST 2 - "+qresStack.pop().toString());
+        System.out.println("TEST 2 - " + qresStack.pop().toString());
 
 
         assertTrue( true );
@@ -184,7 +185,7 @@ public class TestCw2
         ISingleResult stringResultRight = (StringResult)qresStack.pop();
         ISingleResult stringResultLeft = (StringResult)qresStack.pop();
         qresStack.push(new BagResult(Arrays.asList(stringResultLeft,stringResultRight)));
-        qresStack.push(new BinderResult("x",qresStack.pop()));
+        qresStack.push(new GroupAsResult("x",qresStack.pop()));  //TODO?
         qresStack.push(new DoubleResult(2.2));
         qresStack.push(new BooleanResult(true));
         ISingleResult singleResultRight =(ISingleResult) qresStack.pop();
@@ -193,7 +194,7 @@ public class TestCw2
 
         qresStack.push(new StructResult(Arrays.asList(singleResultLeft,singleResultCenter,singleResultRight)));
 
-        System.out.println("TEST 3 - "+qresStack.pop().toString());
+        System.out.println("TEST 3 - " + qresStack.pop().toString());
 
 
         assertTrue(true);
