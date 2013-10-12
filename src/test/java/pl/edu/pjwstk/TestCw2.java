@@ -15,6 +15,7 @@ import pl.edu.pjwstk.ast.terminal.StringTerminal;
 import pl.edu.pjwstk.ast.unary.CountExpression;
 import pl.edu.pjwstk.interpreter.qres.*;
 import pl.edu.pjwstk.result.*;
+import pl.edu.pjwstk.util.OperationUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,13 +79,10 @@ public class TestCw2
         QresStack qresStack = new QresStack();
         qresStack.push(new IntegerResult(1));
         qresStack.push(new DoubleResult(2.1));
-        ISingleResult resultRight = (ISingleResult) qresStack.pop();
-        ISingleResult resultLeft = (ISingleResult) qresStack.pop();
-        qresStack.push(new StructResult(Arrays.asList(
-                resultLeft,
-                resultRight
-        )));
-        qresStack.push(new BagResult(((StructResult)qresStack.pop()).elements()));
+        IAbstractQueryResult resultRight = qresStack.pop();
+        IAbstractQueryResult resultLeft = qresStack.pop();
+        qresStack.push(OperationUtil.comma(resultLeft,resultRight));
+        qresStack.push(new BagResult(((IStructResult)qresStack.pop()).elements()));
         qresStack.push(new IntegerResult(3));
         qresStack.push(new IntegerResult(4));
         IIntegerResult intResultRight = (IIntegerResult) qresStack.pop();
@@ -97,32 +95,13 @@ public class TestCw2
         ISingleResult rightResultLeft = (ISingleResult) qresStack.pop();
         qresStack.push(new StructResult(Arrays.asList(rightResultLeft,rightResultRight)));
         qresStack.push(new BagResult(((StructResult)qresStack.pop()).elements()));
-        IBagResult bagResultRight = (IBagResult) qresStack.pop();
-        IBagResult bagResultLeft = (IBagResult) qresStack.pop();
-
-
-        List<ISingleResult>   listForBag = new ArrayList<ISingleResult>();
-
-        for (ISingleResult singleResultLeft: bagResultLeft.getElements()){
-            for (ISingleResult singleResultRight: bagResultRight.getElements()){
-                listForBag.add(new StructResult(Arrays.asList(singleResultLeft,singleResultRight)));
-            }
-        }
-        qresStack.push(new StructResult(listForBag));
-        qresStack.push(new BagResult(((StructResult)qresStack.pop()).elements()));
+        IAbstractQueryResult bagResultRight = qresStack.pop();
+        IAbstractQueryResult bagResultLeft = qresStack.pop();
+        qresStack.push(OperationUtil.comma(bagResultLeft,bagResultRight));
 
         qresStack.push(new StringResult("nazwa"));
-
-        qresStack.push(
-                new BinderResult(
-                    ((IStringResult) qresStack.pop()).getValue(),
-                     qresStack.pop() //BAG
-                )
-        );
-
+        qresStack.push(OperationUtil.as(((IStringResult) qresStack.pop()).getValue(),(ISingleResult)qresStack.pop()));
         System.out.println("TEST 1 - "+qresStack.pop().toString());
-
-
         assertTrue(true);
     }
 
@@ -135,16 +114,15 @@ public class TestCw2
 
         qresStack.push(new StringResult("ala"));
         qresStack.push(new StringResult("ma"));
+        IAbstractQueryResult ma =  qresStack.pop();
+        IAbstractQueryResult ala =  qresStack.pop();
+        qresStack.push(OperationUtil.comma(ala,ma));
+
         qresStack.push(new StringResult("kota"));
-        ISingleResult kota = (IStringResult) qresStack.pop();
-        ISingleResult ma = (IStringResult) qresStack.pop();
-        ISingleResult ala = (IStringResult) qresStack.pop();
-        qresStack.push(new StructResult(Arrays.asList(
-                ala,
-                ma,
-                kota
-        )));
-        qresStack.push(new BagResult(((StructResult)qresStack.pop()).elements()));
+        IAbstractQueryResult kota = qresStack.pop();
+        qresStack.push(OperationUtil.comma(qresStack.pop(),kota));
+        qresStack.push(new BagResult(((IStructResult)qresStack.pop()).elements()));
+
         qresStack.push(new IntegerResult(8));
         qresStack.push(new IntegerResult(10));
         IIntegerResult mulRight = (IIntegerResult)qresStack.pop();   //10
@@ -152,29 +130,18 @@ public class TestCw2
 
         qresStack.push(new IntegerResult(mulLeft.getValue()*mulRight.getValue()));  //80
         qresStack.push(new BooleanResult(false)); //false
-        ISingleResult singleResultRight = (ISingleResult)qresStack.pop(); //BOOL
-        ISingleResult singleResultLeft = (ISingleResult)qresStack.pop(); //INT
-        qresStack.push(new StructResult(Arrays.asList(singleResultLeft,singleResultRight)));
+        IAbstractQueryResult singleResultRight = qresStack.pop(); //BOOL
+        IAbstractQueryResult singleResultLeft = qresStack.pop(); //INT
+        qresStack.push(OperationUtil.comma(singleResultLeft,singleResultRight));
 
 
-        StructResult structResultRight = (StructResult) qresStack.pop();
-        IBagResult bagResultLeft = (IBagResult) qresStack.pop();
+        IAbstractQueryResult structResultRight =  qresStack.pop();
+        IAbstractQueryResult bagResultLeft =  qresStack.pop();
 
-        List<ISingleResult>   listForBag = new ArrayList<ISingleResult>();
 
-        for (ISingleResult bagSingleResultLeft: bagResultLeft.getElements()){
-            List<ISingleResult> listForStruct = new ArrayList<ISingleResult>();
-            listForStruct.add(bagSingleResultLeft);
-            listForStruct.addAll(structResultRight.elements());
-
-            listForBag.add(new StructResult(listForStruct));
-        }
-        qresStack.push(new StructResult(listForBag));
-        qresStack.push(new BagResult(((StructResult)qresStack.pop()).elements()));
-
+        qresStack.push(OperationUtil.comma(bagResultLeft,structResultRight));
 
         System.out.println("TEST 2 - " + qresStack.pop().toString());
-
 
         assertTrue( true );
     }
@@ -187,24 +154,26 @@ public class TestCw2
         QresStack qresStack = new QresStack();
         qresStack.push(new StringResult("JPS"));
         qresStack.push(new StringResult("RULES"));
-        ISingleResult stringResultRight = (StringResult)qresStack.pop();
-        ISingleResult stringResultLeft = (StringResult)qresStack.pop();
-        qresStack.push(new StructResult(Arrays.asList(stringResultLeft,stringResultRight)));
+        IAbstractQueryResult stringResultRight = qresStack.pop();
+        IAbstractQueryResult stringResultLeft =  qresStack.pop();
+        qresStack.push(OperationUtil.comma(stringResultLeft,stringResultRight));
         qresStack.push(new BagResult(((StructResult)qresStack.pop()).elements()));
-        qresStack.push(new BinderResult("x",qresStack.pop()));
-
-
-
-
+        qresStack.push(new StringResult("x"));
+        qresStack.push(OperationUtil.groupAs(((StringResult) qresStack.pop()).getValue(), qresStack.pop()));
         qresStack.push(new DoubleResult(2.2));
+
+
+        IAbstractQueryResult singleResultCenter = qresStack.pop();
+        IAbstractQueryResult singleResultLeft =   qresStack.pop();
+
+        qresStack.push(OperationUtil.comma(singleResultLeft,singleResultCenter));
+
         qresStack.push(new BooleanResult(true));
-        ISingleResult singleResultRight =(ISingleResult) qresStack.pop();
-        ISingleResult singleResultCenter =(ISingleResult) qresStack.pop();
-        ISingleResult singleResultLeft = (ISingleResult)qresStack.pop();
 
+        IAbstractQueryResult commaRight =  qresStack.pop();
+        IAbstractQueryResult commaLeft =  qresStack.pop();
 
-        qresStack.push(new StructResult(Arrays.asList(singleResultLeft,singleResultCenter,singleResultRight)));  //Bag Result Left
-        qresStack.push(new BagResult(((StructResult)qresStack.pop()).elements()));
+        qresStack.push(OperationUtil.comma(commaLeft,commaRight));
 
         System.out.println("TEST 3 - " + qresStack.pop().toString());
 

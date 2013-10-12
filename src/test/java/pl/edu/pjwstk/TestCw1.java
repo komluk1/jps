@@ -97,25 +97,26 @@ public class TestCw1
     }
 
     /**
+     * . dot expression
      * (firma where nazwa=”XYZ”).(zatrudnia where nazwisko=”Kowalski”)
      */
     public void test4() {
-        IExpression expression = new WhereExpression(
-                new WhereExpression(
-                        new NameTerminal("firma"),
-                        new EqualsExpression(
-                                new NameTerminal("nazwa"),
-                                new StringTerminal("XYZ")
-                        )
-                ),
-                new WhereExpression(
-                        new NameTerminal("zatrudnia"),
-                        new EqualsExpression(
-                                new NameTerminal("nazwisko"),
-                                new StringTerminal("Kowalski")
-                        )
-                )
-        );
+        IExpression expression =
+                new DotExpression(
+                    new WhereExpression(
+                            new NameTerminal("firma"),
+                            new EqualsExpression(
+                                    new NameTerminal("nazwa"),
+                                    new StringTerminal("XYZ")
+                            )
+                    ),
+                    new WhereExpression(
+                            new NameTerminal("zatrudnia"),
+                            new EqualsExpression(
+                                    new NameTerminal("nazwisko"),
+                                    new StringTerminal("Kowalski")
+                            )
+                ));
         assertTrue(true);
     }
 }

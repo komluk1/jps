@@ -13,6 +13,7 @@ public class SBAStore implements ISBAStore {
     private static final Logger logger = Logger.getLogger(SBAStore.class);
     public static final String XML_ENTRY_POINT_NODE_NAME = "entry";
 
+    private IOID entryOID=null;
     private Map<IOID,ISBAObject> data = new LinkedHashMap<IOID, ISBAObject>();
     private IOIDGenerator ioidGenerator =
             new IOIDGeneratorFactory(LongOIDGenerator.class).getIOIDGenerator();
@@ -22,10 +23,9 @@ public class SBAStore implements ISBAStore {
         return data.get(oid);
     }
 
-    //TODO (?) czy na pewno o to chodzi -> ID BAZY
     @Override
     public IOID getEntryOID() {
-        return ioidGenerator.entryOid();
+        return entryOID;
     }
 
     @Override
@@ -33,9 +33,13 @@ public class SBAStore implements ISBAStore {
         Map<String,Object> base = XMLToMap.toMap(filePath);
         for (Map.Entry<String,Object> baseEntry: base.entrySet()){
             if (baseEntry.getValue() instanceof  Map){
-                addObjectMap((Map)baseEntry.getValue(),baseEntry.getKey());
+                OIDAwareObject oidAwareObject =  addObjectMap((Map)baseEntry.getValue(),baseEntry.getKey());
+                if (entryOID==null){
+                    entryOID=oidAwareObject.getOID();
+                }
             }
         }
+
 
     }
 
@@ -104,8 +108,10 @@ public class SBAStore implements ISBAStore {
         return new ComplexObject(objectName,ioids);
     }
 
-     protected void addObjectMap(Map<String,Object> map,String objectName){
-         persist(getComplexObject(objectName,map));
+     protected OIDAwareObject addObjectMap(Map<String,Object> map,String objectName){
+         OIDAwareObject oidAwareObject = getComplexObject(objectName, map) ;
+         persist(oidAwareObject);
+         return oidAwareObject;
      }
 
     protected void persist(OIDAwareObject oidAwareObject){
