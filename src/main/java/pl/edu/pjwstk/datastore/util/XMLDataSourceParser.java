@@ -2,7 +2,6 @@ package pl.edu.pjwstk.datastore.util;
 
 import edu.pjwstk.jps.datastore.IOID;
 import edu.pjwstk.jps.datastore.ISBAObject;
-import org.apache.xerces.dom.DeferredNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

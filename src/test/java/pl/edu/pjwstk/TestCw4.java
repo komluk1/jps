@@ -16,9 +16,7 @@ import pl.edu.pjwstk.datastore.StringObject;
 import pl.edu.pjwstk.interpreter.envs.ENVS;
 import pl.edu.pjwstk.interpreter.envs.ENVSBinder;
 import pl.edu.pjwstk.interpreter.envs.ENVSFrame;
-import pl.edu.pjwstk.interpreter.qres.BagResult;
-import pl.edu.pjwstk.interpreter.qres.QresStack;
-import pl.edu.pjwstk.interpreter.qres.StringResult;
+import pl.edu.pjwstk.interpreter.qres.*;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -125,13 +123,10 @@ public class TestCw4
                 if (number instanceof IReferenceResult){
                     IReferenceResult referenceResult = (IReferenceResult)number;
                     ISBAObject isbaObject = sbaStore.retrieve(referenceResult.getOIDValue());
-                    if (
-                        (isbaObject instanceof StringObject
-                         && "50".equals(((StringObject)isbaObject).getValue())
-                        ) ||
-                        (isbaObject instanceof IntegerObject
-                                && new Integer("50").equals(((IntegerObject)isbaObject).getValue())
-                        )){
+
+                    qresStack.push(new IntegerResult(50));
+                    qresStack.push(new BooleanResult(isbaObject instanceof IntegerObject &&  ((IntegerResult)qresStack.pop()).getValue().equals(((IntegerObject)isbaObject).getValue())));
+                    if (((BooleanResult)qresStack.pop()).getValue()){
                         envs.pop();   //revert number
                         singleResults.addAll(envs.bind("lName").getElements());
                         envs.pop();   //revert address
@@ -154,7 +149,6 @@ public class TestCw4
         URL url =  getClass().getClassLoader().getResource("TestCw4_dane.xml");
         SBAStore sbaStore = new SBAStore();
         sbaStore.loadXML(url.getPath());
-
 
         ENVS envs = new ENVS();
         envs.init(sbaStore.getEntryOID(),sbaStore);
@@ -180,17 +174,20 @@ public class TestCw4
                 if (number instanceof IReferenceResult){
                     IReferenceResult referenceResult = (IReferenceResult)number;
                     ISBAObject isbaObject = sbaStore.retrieve(referenceResult.getOIDValue());
-                    if (isbaObject instanceof StringObject && "Pan Tadeusz".equals(((StringObject)isbaObject).getValue())){
+                    qresStack.push(new StringResult("Pan Tadeusz"));
+                    qresStack.push(new BooleanResult(isbaObject instanceof StringObject &&  ((StringResult)qresStack.pop()).getValue().equals(((StringObject)isbaObject).getValue())));
+                    if (((BooleanResult)qresStack.pop()).getValue()){
                         envs.pop();   //revert number
                         IBagResult bagResult = envs.bind("fName");
                         for (ISingleResult singleResultFName: bagResult.getElements()){
                             IReferenceResult fNameReferenceResult = (IReferenceResult) singleResultFName;
                             ISBAObject fName =  sbaStore.retrieve(fNameReferenceResult.getOIDValue());
-                            if (fName instanceof  StringObject && "Anna".equals(((StringObject)fName).getValue())){
+                            qresStack.push(new StringResult("Anna"));
+                            qresStack.push(new BooleanResult(fName instanceof StringObject &&  ((StringResult)qresStack.pop()).getValue().equals(((StringObject)fName).getValue())));
+                            if (((BooleanResult)qresStack.pop()).getValue()){
                                 singleResults.add(singleResult);
                             }
                         }
-
                         envs.pop();   //revert address
                     }
                 }
