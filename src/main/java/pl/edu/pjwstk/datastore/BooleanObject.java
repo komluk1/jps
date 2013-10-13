@@ -4,7 +4,7 @@ import edu.pjwstk.jps.datastore.IBooleanObject;
 import edu.pjwstk.jps.datastore.IOID;
 
 public class BooleanObject extends SingleObject<Boolean> implements IBooleanObject {
-    protected BooleanObject(String name, Boolean value) {
+    public BooleanObject(String name, Boolean value) {
         super(name, value);
     }
 

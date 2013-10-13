@@ -4,8 +4,11 @@ import edu.pjwstk.jps.datastore.IOID;
 import edu.pjwstk.jps.datastore.ISBAObject;
 import edu.pjwstk.jps.datastore.ISBAStore;
 import org.apache.log4j.Logger;
-import pl.edu.pjwstk.datastore.util.BeanToMap;
-import pl.edu.pjwstk.datastore.util.XMLToMap;
+import pl.edu.pjwstk.datastore.util.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 public class SBAStore implements ISBAStore {
@@ -30,17 +33,19 @@ public class SBAStore implements ISBAStore {
 
     @Override
     public void loadXML(String filePath) {
-        Map<String,Object> base = XMLToMap.toMap(filePath);
-        for (Map.Entry<String,Object> baseEntry: base.entrySet()){
-            if (baseEntry.getValue() instanceof  Map){
-                OIDAwareObject oidAwareObject =  addObjectMap((Map)baseEntry.getValue(),baseEntry.getKey());
-                if (entryOID==null){
-                    entryOID=oidAwareObject.getOID();
+        try {
+            DataSourceParser parser = new XMLDataSourceParser(new ObjectPersister() {
+                @Override
+                public void persist(ISBAObject isbaObject) {
+                    SBAStore.this.persist(isbaObject);
                 }
-            }
+            });
+            InputStream is = new URL("file://" + filePath).openStream();
+            ISBAObject isbaObject = parser.parse(is);
+            this.entryOID=isbaObject.getOID();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -114,9 +119,9 @@ public class SBAStore implements ISBAStore {
          return oidAwareObject;
      }
 
-    protected void persist(OIDAwareObject oidAwareObject){
+    protected void persist(ISBAObject oidAwareObject){
         IOID ioid = ioidGenerator.generate();
-        oidAwareObject.setOID(ioid);
+        ((OIDAwareObject)oidAwareObject).setOID(ioid);
         data.put(ioid,oidAwareObject);
     }
 
