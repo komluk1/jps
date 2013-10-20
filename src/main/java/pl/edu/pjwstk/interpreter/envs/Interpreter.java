@@ -14,6 +14,7 @@ import pl.edu.pjwstk.interpreter.qres.QresStack;
 import pl.edu.pjwstk.interpreter.qres.StringResult;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -27,7 +28,7 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public IAbstractQueryResult eval(IExpression queryTreeRoot) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
@@ -220,13 +221,12 @@ public class Interpreter implements IInterpreter {
 
         if (result instanceof IBagResult) {
             Collection<ISingleResult> collection = ((IBagResult) result).getElements();
-            if (collection.size() == 1) {
-                ISingleResult singleResult = (ISingleResult) collection.toArray()[0]; // TODO jakiś ładniejszy sposób? :O
-
+            Iterator<ISingleResult> iterator = collection.iterator();
+            if (iterator.hasNext()) {
+                ISingleResult singleResult = iterator.next();
                 if (singleResult instanceof IStructResult) {
                     return getResult(singleResult);
                 }
-
                 return singleResult;
             } else {
                 throw new RuntimeException("..."); // TODO biznesowy exception
@@ -247,8 +247,6 @@ public class Interpreter implements IInterpreter {
                 throw new RuntimeException("..."); // TODO biznesowy exception
             }
         }
-
-
         throw new RuntimeException("..."); // TODO biznesowy exception
     }
 

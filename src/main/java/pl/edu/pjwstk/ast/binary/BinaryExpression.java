@@ -29,6 +29,7 @@ public abstract class BinaryExpression implements IBinaryExpression {
 
     @Override
     public void accept(ASTVisitor visitor) {
+
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }
