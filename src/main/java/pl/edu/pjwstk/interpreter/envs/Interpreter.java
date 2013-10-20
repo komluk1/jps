@@ -309,7 +309,27 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitOrExpression(IOrExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        left = doDereference(left);
+        right = doDereference(right);
+
+        if (!(left instanceof IBooleanResult && right instanceof IBooleanResult)) {
+            throw new WrongTypeException("Only Boolean is allowed");
+        }
+
+        stack.push(new BooleanResult(((IBooleanResult) left).getValue() || ((IBooleanResult) right).getValue()));
     }
 
     @Override
