@@ -721,12 +721,82 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitMaxExpression(IMaxExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+
+        IAbstractQueryResult result = stack.pop();
+        List<ISingleResult> eres = getResultList(result);
+
+        if (0 == eres.size()) {
+            throw new RuntimeException("Empty collection!");
+        }
+
+        boolean isDoubleInstance = false;
+        double max = Double.MIN_VALUE;
+
+        for (ISingleResult element : eres) {
+            element = (ISingleResult) doDereference(element);
+
+            if (element instanceof IIntegerResult) {
+                int value = ((IIntegerResult) element).getValue();
+                if (max < value) {
+                    max = value;
+                }
+            } else if (element instanceof IDoubleResult) {
+                Double value = ((IDoubleResult) element).getValue();
+                isDoubleInstance = true;
+                if (max < value) {
+                    max = value;
+                }
+            } else {
+                throw new WrongTypeException("Only Integer or Double are allowed. " + element.getClass() + " was used");
+            }
+        }
+
+        if (isDoubleInstance) {
+            stack.push(new DoubleResult(max));
+        } else {
+            stack.push(new IntegerResult((int) max));
+        }
     }
 
     @Override
     public void visitMinExpression(IMinExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+
+        IAbstractQueryResult result = stack.pop();
+        List<ISingleResult> eres = getResultList(result);
+
+        if (0 == eres.size()) {
+            throw new RuntimeException("Empty collection!");
+        }
+
+        boolean isDoubleInstance = false;
+        double min = Double.MAX_VALUE;
+
+        for (ISingleResult element : eres) {
+            element = (ISingleResult) doDereference(element);
+
+            if (element instanceof IIntegerResult) {
+                int value = ((IIntegerResult) element).getValue();
+                if (min > value) {
+                    min = value;
+                }
+            } else if (element instanceof IDoubleResult) {
+                Double value = ((IDoubleResult) element).getValue();
+                isDoubleInstance = true;
+                if (min > value) {
+                    min = value;
+                }
+            } else {
+                throw new WrongTypeException("Only Integer or Double are allowed. " + element.getClass() + " was used");
+            }
+        }
+
+        if (isDoubleInstance) {
+            stack.push(new DoubleResult(min));
+        } else {
+            stack.push(new IntegerResult((int) min));
+        }
     }
 
     @Override
@@ -774,7 +844,7 @@ public class Interpreter implements IInterpreter {
                 sum += ((IDoubleResult) element).getValue();
                 isDoubleInstance = true;
             } else {
-                throw new WrongTypeException("Only Integer or Double are allowed. " + sum.getClass() + " was used");
+                throw new WrongTypeException("Only Integer or Double are allowed. " + element.getClass() + " was used");
             }
         }
 
