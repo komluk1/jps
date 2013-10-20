@@ -69,7 +69,55 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitDivideExpression(IDivideExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        left = doDereference(left);
+        right = doDereference(right);
+
+        boolean isDoubleInstance = false;
+        Double result = 0.0;
+        if (left instanceof IIntegerResult) {
+            result += ((IIntegerResult) left).getValue();
+        } else if (left instanceof IDoubleResult) {
+            result += ((IDoubleResult) left).getValue();
+            isDoubleInstance = true;
+        } else {
+            throw new WrongTypeException("Only Integer or Double are allowed. " + left.getClass() + " was used");
+        }
+
+        if (right instanceof IIntegerResult) {
+            int value = ((IIntegerResult) right).getValue();
+            if (0 == value) {
+                throw new ArithmeticException("Division by zero");
+            }
+            result /= value;
+        } else if (right instanceof IDoubleResult) {
+            Double value = ((IDoubleResult) right).getValue();
+            if (0 == value) {
+                throw new ArithmeticException("Division by zero");
+            }
+            result /= value;
+            isDoubleInstance = true;
+        } else {
+            throw new WrongTypeException("Only Integer or Double are allowed. " + right.getClass() + " was used");
+        }
+
+        if (isDoubleInstance) {
+            stack.push(new DoubleResult(result));
+        } else {
+            stack.push(new IntegerResult(result.intValue()));
+        }
     }
 
     @Override
