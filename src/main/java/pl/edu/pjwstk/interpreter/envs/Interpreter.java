@@ -125,15 +125,15 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
 
-        left = doDereference(left);
-        right = doDereference(right);
-
         try {
             right = getResult(right);
             left = getResult(left);
         } catch (RuntimeException e) {
             throw new WrongTypeException("Unable to retrieve a single value");
         }
+
+        left = doDereference(left);
+        right = doDereference(right);
 
         boolean isDoubleInstance = false;
         Double result = 0.0;
@@ -200,15 +200,15 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
 
-        left = doDereference(left);
-        right = doDereference(right);
-
         try {
             right = getResult(right);
             left = getResult(left);
         } catch (RuntimeException e) {
             throw new WrongTypeException("Unable to retrieve a single value");
         }
+
+        left = doDereference(left);
+        right = doDereference(right);
 
         if (left instanceof IStringResult || right instanceof IStringResult) {
             stack.push(new StringResult(((IStringResult) left).getValue() + ((IStringResult) right).getValue()));
@@ -311,13 +311,14 @@ public class Interpreter implements IInterpreter {
         expr.getInnerExpression().accept(this);
 
         IAbstractQueryResult result = stack.pop();
-        result = doDereference(result);
 
         try {
             result = getResult(result);
         } catch (RuntimeException e) {
             throw new WrongTypeException("Unable to retrieve a single value");
         }
+
+        result = doDereference(result);
 
         if (result instanceof IBooleanResult) {
             stack.push(new BooleanResult(((IBooleanResult) result).getValue()));
