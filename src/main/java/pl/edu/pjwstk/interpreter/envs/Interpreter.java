@@ -721,7 +721,8 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitExistsExpression(IExistsExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+        // TODO - nie wiem o co tu chodzi?
     }
 
     @Override
