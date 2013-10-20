@@ -7,16 +7,24 @@ import edu.pjwstk.jps.ast.binary.*;
 import edu.pjwstk.jps.ast.terminal.*;
 import edu.pjwstk.jps.ast.unary.*;
 import edu.pjwstk.jps.interpreter.envs.IInterpreter;
-import edu.pjwstk.jps.result.IAbstractQueryResult;
+import edu.pjwstk.jps.result.*;
+import pl.edu.pjwstk.interpreter.qres.DoubleResult;
+import pl.edu.pjwstk.interpreter.qres.IntegerResult;
+import pl.edu.pjwstk.interpreter.qres.QresStack;
+import pl.edu.pjwstk.interpreter.qres.StringResult;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Piotr Sukiennik
- * Date: 13.10.13
- * Time: 09:37
- * To change this template use File | Settings | File Templates.
- */
+import java.util.Collection;
+import java.util.List;
+
+
 public class Interpreter implements IInterpreter {
+
+    private QresStack stack;
+
+    protected Interpreter() {
+        stack = new QresStack();
+    }
+
     @Override
     public IAbstractQueryResult eval(IExpression queryTreeRoot) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -144,7 +152,104 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitPlusExpression(IPlusExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        //TODO dereferencja dla right, left
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            System.err.print("EXCEPTION!"); // TODO obmyslic prawidlowe zachowanie w przypadku przechwycenia bledu
+        }
+
+        if (left instanceof IStringResult || right instanceof IStringResult) {
+            stack.push(new StringResult(((IStringResult) left).getValue() + ((IStringResult) right).getValue()));
+        }
+
+        boolean isDoubleInstance = false;
+        Double result = 0.0;
+        if (left instanceof IIntegerResult) {
+            result += ((IIntegerResult) left).getValue();
+        } else if (left instanceof IDoubleResult) {
+            result += ((IDoubleResult) left).getValue();
+            isDoubleInstance = true;
+        } else {
+            throw new RuntimeException("..."); // TODO biznesowy exception
+        }
+
+        if (right instanceof IIntegerResult) {
+            result += ((IIntegerResult) right).getValue();
+        } else if (right instanceof IDoubleResult) {
+            result += ((IDoubleResult) right).getValue();
+            isDoubleInstance = true;
+        } else {
+            throw new RuntimeException("..."); // TODO biznesowy exception
+        }
+
+        if (isDoubleInstance) {
+            stack.push(new DoubleResult(result));
+        } else {
+            stack.push(new IntegerResult(result.intValue()));
+        }
+    }
+
+    private ISingleResult getResult(IAbstractQueryResult result) {
+        if (result instanceof ISingleResult) {
+            if (result instanceof IStructResult) {
+                List<ISingleResult> list = ((IStructResult) result).elements();
+                if (list.size() == 1) {
+                    ISingleResult singleResult = list.get(0);
+
+                    if (singleResult instanceof IStructResult) {
+                        return getResult(singleResult);
+                    }
+
+                    return singleResult;
+                } else {
+                    throw new RuntimeException("..."); // TODO biznesowy exception
+                }
+            }
+
+            return (ISingleResult) result;
+        }
+
+        if (result instanceof IBagResult) {
+            Collection<ISingleResult> collection = ((IBagResult) result).getElements();
+            if (collection.size() == 1) {
+                ISingleResult singleResult = (ISingleResult) collection.toArray()[0]; // TODO jakiś ładniejszy sposób? :O
+
+                if (singleResult instanceof IStructResult) {
+                    return getResult(singleResult);
+                }
+
+                return singleResult;
+            } else {
+                throw new RuntimeException("..."); // TODO biznesowy exception
+            }
+        }
+
+        if (result instanceof ISequenceResult) {
+            List<ISingleResult> list = ((ISequenceResult) result).getElements();
+            if (list.size() == 1) {
+                ISingleResult singleResult = list.get(0);
+
+                if (singleResult instanceof IStructResult) {
+                    return getResult(singleResult);
+                }
+
+                return singleResult;
+            } else {
+                throw new RuntimeException("..."); // TODO biznesowy exception
+            }
+        }
+
+
+        throw new RuntimeException("..."); // TODO biznesowy exception
     }
 
     @Override
@@ -234,7 +339,6 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitAvgExpression(IAvgExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
 
