@@ -232,8 +232,8 @@ public class Interpreter implements IInterpreter {
             return;
         }
 
-        if (left instanceof IDoubleObject && right instanceof IDoubleObject) {
-            int result = ((IDoubleObject) left).getValue().compareTo(((IDoubleObject) right).getValue());
+        if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
+            int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
 
             if (result < 0) {
                 stack.push(new BooleanResult(true));
@@ -283,8 +283,8 @@ public class Interpreter implements IInterpreter {
             return;
         }
 
-        if (left instanceof IDoubleObject && right instanceof IDoubleObject) {
-            int result = ((IDoubleObject) left).getValue().compareTo(((IDoubleObject) right).getValue());
+        if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
+            int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
 
             if (result <= 0) {
                 stack.push(new BooleanResult(true));
@@ -349,8 +349,8 @@ public class Interpreter implements IInterpreter {
             return;
         }
 
-        if (left instanceof IDoubleObject && right instanceof IDoubleObject) {
-            int result = ((IDoubleObject) left).getValue().compareTo(((IDoubleObject) right).getValue());
+        if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
+            int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
 
             if (result >= 0) {
                 stack.push(new BooleanResult(true));
@@ -400,8 +400,8 @@ public class Interpreter implements IInterpreter {
             return;
         }
 
-        if (left instanceof IDoubleObject && right instanceof IDoubleObject) {
-            int result = ((IDoubleObject) left).getValue().compareTo(((IDoubleObject) right).getValue());
+        if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
+            int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
 
             if (result > 0) {
                 stack.push(new BooleanResult(true));
@@ -838,8 +838,8 @@ public class Interpreter implements IInterpreter {
                 return new BooleanResult(((IBooleanObject) object).getValue());
             }
 
-            if (object instanceof IDoubleObject) {
-                return new DoubleResult(((IDoubleObject) object).getValue());
+            if (object instanceof IDoubleResult) {
+                return new DoubleResult(((IDoubleResult) object).getValue());
             }
 
             if (object instanceof IIntegerObject) {
