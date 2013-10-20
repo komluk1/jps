@@ -618,7 +618,21 @@ public class Interpreter implements IInterpreter {
     private List<ISingleResult> getResultList(IAbstractQueryResult result) {
         List<ISingleResult> results = new ArrayList<ISingleResult>();
 
-        // TODO BODY :)
+        if (result instanceof ISingleResult) {
+            if (result instanceof IStructResult) {
+                results.addAll(((IStructResult) result).elements());
+            } else {
+                results.add((SingleResult) result);
+            }
+        }
+
+        if (result instanceof IBagResult) {
+            results.addAll(((IBagResult) result).getElements());
+        }
+
+        if (result instanceof ISequenceResult) {
+            results.addAll(((ISequenceResult) result).getElements());
+        }
 
         return results;
     }
