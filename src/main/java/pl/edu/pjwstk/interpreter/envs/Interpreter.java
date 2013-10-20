@@ -12,6 +12,7 @@ import edu.pjwstk.jps.result.*;
 import pl.edu.pjwstk.interpreter.exception.WrongTypeException;
 import pl.edu.pjwstk.interpreter.qres.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -84,7 +85,32 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitCommaExpression(ICommaExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        BagResult eres = new BagResult();
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult e2Res = stack.pop();
+        IAbstractQueryResult e1Res = stack.pop();
+
+        for (ISingleResult e1 : getResultList(e1Res)) {
+            for (ISingleResult e2 : getResultList(e2Res)) {
+                List<ISingleResult> struct = new ArrayList<ISingleResult>();
+                if (e1 instanceof IStructResult) {
+                    struct.addAll(((IStructResult) e1).elements());
+                } else {
+                    struct.add(e1);
+                }
+                if (e2 instanceof IStructResult) {
+                    struct.addAll(((IStructResult) e2).elements());
+                } else {
+                    struct.add(e2);
+                }
+                eres.getElements().add(new StructResult(struct));
+            }
+        }
+
+        stack.push(eres);
+
     }
 
     @Override
@@ -587,6 +613,14 @@ public class Interpreter implements IInterpreter {
             }
         }
         throw new WrongTypeException();
+    }
+
+    private List<ISingleResult> getResultList(IAbstractQueryResult result) {
+        List<ISingleResult> results = new ArrayList<ISingleResult>();
+
+        // TODO BODY :)
+
+        return results;
     }
 
     private IAbstractQueryResult doDereference(IAbstractQueryResult result) {
