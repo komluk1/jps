@@ -613,7 +613,18 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitUnionExpression(IUnionExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+        BagResult eres = new BagResult();
+
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        eres.getElements().addAll(getResultList(left));
+        eres.getElements().addAll(getResultList(right));
+        stack.push(eres);
     }
 
     @Override
