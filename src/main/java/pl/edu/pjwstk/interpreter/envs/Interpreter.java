@@ -22,10 +22,12 @@ public class Interpreter implements IInterpreter {
 
     private QresStack stack;
     private ISBAStore store;
+    private ENVS envs;
 
-    protected Interpreter(QresStack stack, ISBAStore store) {
+    protected Interpreter(QresStack stack, ISBAStore store, ENVS envs) {
         stack = this.stack;
         store = this.store;
+        envs = this.envs;
     }
 
     @Override
@@ -168,7 +170,12 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitDotExpression(IDotExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        IAbstractQueryResult leftResult = stack.pop();
+
+        for (ISingleResult result : getResultList(leftResult)) {
+            // TODO ogarnac co to jest ENVS
+        }
     }
 
     @Override
