@@ -6,13 +6,11 @@ import edu.pjwstk.jps.ast.auxname.IGroupAsExpression;
 import edu.pjwstk.jps.ast.binary.*;
 import edu.pjwstk.jps.ast.terminal.*;
 import edu.pjwstk.jps.ast.unary.*;
+import edu.pjwstk.jps.datastore.*;
 import edu.pjwstk.jps.interpreter.envs.IInterpreter;
 import edu.pjwstk.jps.result.*;
 import pl.edu.pjwstk.interpreter.exception.WrongTypeException;
-import pl.edu.pjwstk.interpreter.qres.DoubleResult;
-import pl.edu.pjwstk.interpreter.qres.IntegerResult;
-import pl.edu.pjwstk.interpreter.qres.QresStack;
-import pl.edu.pjwstk.interpreter.qres.StringResult;
+import pl.edu.pjwstk.interpreter.qres.*;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -22,9 +20,11 @@ import java.util.List;
 public class Interpreter implements IInterpreter {
 
     private QresStack stack;
+    private ISBAStore store;
 
-    protected Interpreter() {
-        stack = new QresStack();
+    protected Interpreter(QresStack stack, ISBAStore store) {
+        stack = this.stack;
+        store = this.store;
     }
 
     @Override
@@ -160,7 +160,8 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
 
-        //TODO dereferencja dla right, left
+        left = doDereference(left);
+        right = doDereference(right);
 
         try {
             right = getResult(right);
@@ -198,57 +199,6 @@ public class Interpreter implements IInterpreter {
         } else {
             stack.push(new IntegerResult(result.intValue()));
         }
-    }
-
-    private ISingleResult getResult(IAbstractQueryResult result) {
-        if (result instanceof ISingleResult) {
-            if (result instanceof IStructResult) {
-                List<ISingleResult> list = ((IStructResult) result).elements();
-                if (list.size() == 1) {
-                    ISingleResult singleResult = list.get(0);
-
-                    if (singleResult instanceof IStructResult) {
-                        return getResult(singleResult);
-                    }
-
-                    return singleResult;
-                } else {
-                    throw new WrongTypeException();
-                }
-            }
-
-            return (ISingleResult) result;
-        }
-
-        if (result instanceof IBagResult) {
-            Collection<ISingleResult> collection = ((IBagResult) result).getElements();
-            Iterator<ISingleResult> iterator = collection.iterator();
-            if (iterator.hasNext()) {
-                ISingleResult singleResult = iterator.next();
-                if (singleResult instanceof IStructResult) {
-                    return getResult(singleResult);
-                }
-                return singleResult;
-            } else {
-                throw new WrongTypeException();
-            }
-        }
-
-        if (result instanceof ISequenceResult) {
-            List<ISingleResult> list = ((ISequenceResult) result).getElements();
-            if (list.size() == 1) {
-                ISingleResult singleResult = list.get(0);
-
-                if (singleResult instanceof IStructResult) {
-                    return getResult(singleResult);
-                }
-
-                return singleResult;
-            } else {
-                throw new WrongTypeException();
-            }
-        }
-        throw new WrongTypeException();
     }
 
     @Override
@@ -339,5 +289,91 @@ public class Interpreter implements IInterpreter {
     @Override
     public void visitAvgExpression(IAvgExpression expr) {
     }
-}
 
+    private ISingleResult getResult(IAbstractQueryResult result) {
+        if (result instanceof ISingleResult) {
+            if (result instanceof IStructResult) {
+                List<ISingleResult> list = ((IStructResult) result).elements();
+                if (list.size() == 1) {
+                    ISingleResult singleResult = list.get(0);
+
+                    if (singleResult instanceof IStructResult) {
+                        return getResult(singleResult);
+                    }
+
+                    return singleResult;
+                } else {
+                    throw new WrongTypeException();
+                }
+            }
+
+            return (ISingleResult) result;
+        }
+
+        if (result instanceof IBagResult) {
+            Collection<ISingleResult> collection = ((IBagResult) result).getElements();
+            Iterator<ISingleResult> iterator = collection.iterator();
+            if (iterator.hasNext()) {
+                ISingleResult singleResult = iterator.next();
+                if (singleResult instanceof IStructResult) {
+                    return getResult(singleResult);
+                }
+                return singleResult;
+            } else {
+                throw new WrongTypeException();
+            }
+        }
+
+        if (result instanceof ISequenceResult) {
+            List<ISingleResult> list = ((ISequenceResult) result).getElements();
+            if (list.size() == 1) {
+                ISingleResult singleResult = list.get(0);
+
+                if (singleResult instanceof IStructResult) {
+                    return getResult(singleResult);
+                }
+
+                return singleResult;
+            } else {
+                throw new WrongTypeException();
+            }
+        }
+        throw new WrongTypeException();
+    }
+
+    private IAbstractQueryResult doDereference(IAbstractQueryResult result) {
+
+        ISingleResult singleResult;
+        try {
+            singleResult = getResult(result);
+        } catch (RuntimeException e) {
+            return result;
+        }
+
+        if (singleResult instanceof IReferenceResult) {
+            IOID oid = ((IReferenceResult) singleResult).getOIDValue();
+            ISBAObject object = store.retrieve(oid);
+
+            if (object instanceof IBooleanObject) {
+                return new BooleanResult(((IBooleanObject) object).getValue());
+            }
+
+            if (object instanceof IDoubleObject) {
+                return new DoubleResult(((IDoubleObject) object).getValue());
+            }
+
+            if (object instanceof IIntegerObject) {
+                return new IntegerResult(((IIntegerObject) object).getValue());
+            }
+
+            if (object instanceof IStringObject) {
+                return new StringResult(((IStringObject) object).getValue());
+            }
+
+            return new ReferenceResult(object.getOID());
+        }
+
+        return singleResult;
+
+    }
+}
