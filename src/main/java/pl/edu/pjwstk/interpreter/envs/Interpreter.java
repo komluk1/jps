@@ -194,12 +194,104 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitGreaterThanExpression(IGreaterThanExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        left = doDereference(left);
+        right = doDereference(right);
+
+        if (left instanceof IStringResult && right instanceof IStringResult) {
+            int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
+
+            if (result < 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+            return;
+        }
+
+        if (left instanceof IIntegerResult && right instanceof IIntegerResult) {
+            int result = ((IIntegerResult) left).getValue().compareTo(((IIntegerResult) right).getValue());
+
+            if (result < 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+            return;
+        }
+
+        if (left instanceof IDoubleObject && right instanceof IDoubleObject) {
+            int result = ((IDoubleObject) left).getValue().compareTo(((IDoubleObject) right).getValue());
+
+            if (result < 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+        }
     }
 
     @Override
     public void visitGreaterOrEqualThanExpression(IGreaterOrEqualThanExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        left = doDereference(left);
+        right = doDereference(right);
+
+        if (left instanceof IStringResult && right instanceof IStringResult) {
+            int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
+
+            if (result <= 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+            return;
+        }
+
+        if (left instanceof IIntegerResult && right instanceof IIntegerResult) {
+            int result = ((IIntegerResult) left).getValue().compareTo(((IIntegerResult) right).getValue());
+
+            if (result <= 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+            return;
+        }
+
+        if (left instanceof IDoubleObject && right instanceof IDoubleObject) {
+            int result = ((IDoubleObject) left).getValue().compareTo(((IDoubleObject) right).getValue());
+
+            if (result <= 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+        }
     }
 
     @Override
@@ -219,12 +311,104 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitLessOrEqualThanExpression(ILessOrEqualThanExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        left = doDereference(left);
+        right = doDereference(right);
+
+        if (left instanceof IStringResult && right instanceof IStringResult) {
+            int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
+
+            if (result >= 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+            return;
+        }
+
+        if (left instanceof IIntegerResult && right instanceof IIntegerResult) {
+            int result = ((IIntegerResult) left).getValue().compareTo(((IIntegerResult) right).getValue());
+
+            if (result >= 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+            return;
+        }
+
+        if (left instanceof IDoubleObject && right instanceof IDoubleObject) {
+            int result = ((IDoubleObject) left).getValue().compareTo(((IDoubleObject) right).getValue());
+
+            if (result >= 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+        }
     }
 
     @Override
     public void visitLessThanExpression(ILessThanExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        left = doDereference(left);
+        right = doDereference(right);
+
+        if (left instanceof IStringResult && right instanceof IStringResult) {
+            int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
+
+            if (result > 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+            return;
+        }
+
+        if (left instanceof IIntegerResult && right instanceof IIntegerResult) {
+            int result = ((IIntegerResult) left).getValue().compareTo(((IIntegerResult) right).getValue());
+
+            if (result > 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+            return;
+        }
+
+        if (left instanceof IDoubleObject && right instanceof IDoubleObject) {
+            int result = ((IDoubleObject) left).getValue().compareTo(((IDoubleObject) right).getValue());
+
+            if (result > 0) {
+                stack.push(new BooleanResult(true));
+            } else {
+                stack.push(new BooleanResult(false));
+            }
+        }
     }
 
     @Override
