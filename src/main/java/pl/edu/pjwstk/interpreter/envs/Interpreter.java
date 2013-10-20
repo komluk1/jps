@@ -8,6 +8,7 @@ import edu.pjwstk.jps.ast.terminal.*;
 import edu.pjwstk.jps.ast.unary.*;
 import edu.pjwstk.jps.interpreter.envs.IInterpreter;
 import edu.pjwstk.jps.result.*;
+import pl.edu.pjwstk.interpreter.exception.WrongTypeException;
 import pl.edu.pjwstk.interpreter.qres.DoubleResult;
 import pl.edu.pjwstk.interpreter.qres.IntegerResult;
 import pl.edu.pjwstk.interpreter.qres.QresStack;
@@ -165,7 +166,7 @@ public class Interpreter implements IInterpreter {
             right = getResult(right);
             left = getResult(left);
         } catch (RuntimeException e) {
-            System.err.print("EXCEPTION!"); // TODO obmyslic prawidlowe zachowanie w przypadku przechwycenia bledu
+            throw new WrongTypeException("Unable to retrieve a single value");
         }
 
         if (left instanceof IStringResult || right instanceof IStringResult) {
@@ -180,7 +181,7 @@ public class Interpreter implements IInterpreter {
             result += ((IDoubleResult) left).getValue();
             isDoubleInstance = true;
         } else {
-            throw new RuntimeException("..."); // TODO biznesowy exception
+            throw new WrongTypeException("Only Integer or Double are allowed. " + left.getClass() + " was used");
         }
 
         if (right instanceof IIntegerResult) {
@@ -189,7 +190,7 @@ public class Interpreter implements IInterpreter {
             result += ((IDoubleResult) right).getValue();
             isDoubleInstance = true;
         } else {
-            throw new RuntimeException("..."); // TODO biznesowy exception
+            throw new WrongTypeException("Only Integer or Double are allowed. " + right.getClass() + " was used");
         }
 
         if (isDoubleInstance) {
@@ -212,7 +213,7 @@ public class Interpreter implements IInterpreter {
 
                     return singleResult;
                 } else {
-                    throw new RuntimeException("..."); // TODO biznesowy exception
+                    throw new WrongTypeException();
                 }
             }
 
@@ -229,7 +230,7 @@ public class Interpreter implements IInterpreter {
                 }
                 return singleResult;
             } else {
-                throw new RuntimeException("..."); // TODO biznesowy exception
+                throw new WrongTypeException();
             }
         }
 
@@ -244,10 +245,10 @@ public class Interpreter implements IInterpreter {
 
                 return singleResult;
             } else {
-                throw new RuntimeException("..."); // TODO biznesowy exception
+                throw new WrongTypeException();
             }
         }
-        throw new RuntimeException("..."); // TODO biznesowy exception
+        throw new WrongTypeException();
     }
 
     @Override
