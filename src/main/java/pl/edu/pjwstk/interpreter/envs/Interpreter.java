@@ -643,8 +643,6 @@ public class Interpreter implements IInterpreter {
             throw new WrongTypeException("Only Boolean is allowed");
         }
 
-        boolean xor = false;
-
         if (((IBooleanResult) right).getValue() && !((IBooleanResult) left).getValue()) {
             stack.push(new BooleanResult(true));
             return;
@@ -685,7 +683,15 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitBagExpression(IBagExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+        BagResult eres = new BagResult();
+        expr.getInnerExpression().accept(this);
+
+        IAbstractQueryResult result = stack.pop();
+
+        eres.getElements().addAll(getResultList(result));
+
+        stack.push(eres);
     }
 
     @Override
