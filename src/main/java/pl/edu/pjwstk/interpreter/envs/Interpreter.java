@@ -711,7 +711,12 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitCountExpression(ICountExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+
+        IAbstractQueryResult result = stack.pop();
+        List<ISingleResult> eres = getResultList(result);
+
+        stack.push(new IntegerResult(eres.size()));
     }
 
     @Override
