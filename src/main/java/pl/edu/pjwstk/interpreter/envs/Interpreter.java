@@ -308,7 +308,22 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitNotExpression(INotExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+
+        IAbstractQueryResult result = stack.pop();
+        result = doDereference(result);
+
+        try {
+            result = getResult(result);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        if (result instanceof IBooleanResult) {
+            stack.push(new BooleanResult(((IBooleanResult) result).getValue()));
+        }
+
+        throw new WrongTypeException("Illegal type for operation");
     }
 
     @Override
