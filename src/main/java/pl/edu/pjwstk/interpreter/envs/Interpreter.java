@@ -458,7 +458,11 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitMinusSetExpression(IMinusSetExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
     }
 
     @Override
@@ -753,7 +757,32 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitSumExpression(ISumExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+
+        IAbstractQueryResult result = stack.pop();
+        List<ISingleResult> eres = getResultList(result);
+
+        boolean isDoubleInstance = false;
+        Double sum = 0.0;
+
+        for (ISingleResult element : eres) {
+            element = (ISingleResult) doDereference(element);
+
+            if (element instanceof IIntegerResult) {
+                sum += ((IIntegerResult) element).getValue();
+            } else if (element instanceof IDoubleResult) {
+                sum += ((IDoubleResult) element).getValue();
+                isDoubleInstance = true;
+            } else {
+                throw new WrongTypeException("Only Integer or Double are allowed. " + sum.getClass() + " was used");
+            }
+        }
+
+        if (isDoubleInstance) {
+            stack.push(new DoubleResult(sum));
+        } else {
+            stack.push(new IntegerResult(sum.intValue()));
+        }
     }
 
     @Override
