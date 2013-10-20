@@ -127,7 +127,23 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitEqualsExpression(IEqualsExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        left = doDereference(left);
+        right = doDereference(right);
+
+        stack.push(new BooleanResult(left.equals(right)));
     }
 
     @Override
