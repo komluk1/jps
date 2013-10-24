@@ -28,6 +28,7 @@ public class Interpreter implements IInterpreter {
         stack = this.stack;
         store = this.store;
         envs = this.envs;
+        envs.init(store.getEntryOID(), store);
     }
 
     @Override
@@ -170,12 +171,18 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitDotExpression(IDotExpression expr) {
+        BagResult bag = new BagResult();
         expr.getLeftExpression().accept(this);
         IAbstractQueryResult leftResult = stack.pop();
 
         for (ISingleResult result : getResultList(leftResult)) {
-            // TODO ogarnac co to jest ENVS
+            this.envs.push(envs.nested(result, this.store));
+            expr.getRightExpression().accept(this);
+            IAbstractQueryResult rightResult = stack.pop();
+            bag.getElements().add((IStructResult) rightResult);
         }
+
+        stack.push(bag);
     }
 
     @Override
@@ -470,6 +477,10 @@ public class Interpreter implements IInterpreter {
 
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
+
+        if (right instanceof IReferenceResult && left instanceof IReferenceResult) {
+
+        }
     }
 
     @Override
@@ -680,27 +691,27 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitBooleanTerminal(IBooleanTerminal expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        stack.push(new BooleanResult(expr.getValue()));
     }
 
     @Override
     public void visitDoubleTerminal(IDoubleTerminal expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        stack.push(new DoubleResult(expr.getValue()));
     }
 
     @Override
     public void visitIntegerTerminal(IIntegerTerminal expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        stack.push(new IntegerResult(expr.getValue()));
     }
 
     @Override
     public void visitNameTerminal(INameTerminal expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        stack.push(new BinderResult(expr.getName(), this.envs.bind(expr.getName())));
     }
 
     @Override
     public void visitStringTerminal(IStringTerminal expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        stack.push(new StringResult(expr.getValue()));
     }
 
     @Override
@@ -729,7 +740,8 @@ public class Interpreter implements IInterpreter {
     @Override
     public void visitExistsExpression(IExistsExpression expr) {
         expr.getInnerExpression().accept(this);
-        // TODO - nie wiem o co tu chodzi?
+
+        IAbstractQueryResult result = stack.pop();
     }
 
     @Override
