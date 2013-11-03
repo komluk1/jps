@@ -400,7 +400,7 @@ public class Interpreter implements IInterpreter {
         for (ISingleResult leftSingleResult : leftList) {
             for (ISingleResult rightSingleResult : rightList) {
                 if (leftSingleResult.equals(rightSingleResult)) {
-                    continue;
+                    break;
                 }
             }
             stack.push(new BooleanResult(false));
