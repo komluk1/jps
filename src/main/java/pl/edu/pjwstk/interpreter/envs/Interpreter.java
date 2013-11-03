@@ -66,7 +66,9 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitGroupAsExpression(IGroupAsExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+        IAbstractQueryResult result = stack.pop();
+        stack.push(new BinderResult(expr.getAuxiliaryName(), result));
     }
 
     @Override
