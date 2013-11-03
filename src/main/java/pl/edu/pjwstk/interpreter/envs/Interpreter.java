@@ -603,10 +603,14 @@ public class Interpreter implements IInterpreter {
 
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
+        right = doDereference(right);
+        left = doDereference(left);
+        List<ISingleResult> rightList = getResultList(right);
+        List<ISingleResult> leftList = getResultList(left);
 
-        if (right instanceof IReferenceResult && left instanceof IReferenceResult) {
+        leftList.removeAll(rightList);
 
-        }
+        stack.push(new BagResult(leftList));
     }
 
     @Override
