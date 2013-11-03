@@ -257,9 +257,9 @@ public class Interpreter implements IInterpreter {
             expr.getRightExpression().accept(this);
             IAbstractQueryResult rightResult = stack.pop();
             bag.getElements().add((IStructResult) rightResult);
+            envs.pop();
         }
 
-        envs.pop();
         stack.push(bag);
     }
 
@@ -823,7 +823,34 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitWhereExpression(IWhereExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        BagResult eres = new BagResult();
+        expr.getLeftExpression().accept(this);
+        IAbstractQueryResult left = stack.pop();
+
+        for (ISingleResult result : getResultList(left)) {
+            this.envs.push(envs.nested(result, this.store));
+            expr.getRightExpression().accept(this);
+            IAbstractQueryResult right = stack.pop();
+
+            try {
+                right = getResult(right);
+            } catch (RuntimeException e) {
+                throw new WrongTypeException("Unable to retrieve a single value");
+            }
+
+            right = doDereference(right);
+
+            if (!(right instanceof IBooleanResult)) {
+                throw new WrongTypeException("Only Boolean is allowed");
+            }
+
+            if (((IBooleanResult) right).getValue()) {
+                eres.getElements().add(result);
+            }
+
+            envs.pop();
+        }
+        stack.push(eres);
     }
 
     @Override
