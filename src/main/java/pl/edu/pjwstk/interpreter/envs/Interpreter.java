@@ -615,7 +615,51 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitModuloExpression(IModuloExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+
+        try {
+            right = getResult(right);
+            left = getResult(left);
+        } catch (RuntimeException e) {
+            throw new WrongTypeException("Unable to retrieve a single value");
+        }
+
+        left = doDereference(left);
+        right = doDereference(right);
+
+        if (left instanceof IStringResult || right instanceof IStringResult) {
+            stack.push(new StringResult(((IStringResult) left).getValue() + ((IStringResult) right).getValue()));
+        }
+
+        boolean isDoubleInstance = false;
+        Double result = 0.0;
+        if (left instanceof IIntegerResult) {
+            result += ((IIntegerResult) left).getValue();
+        } else if (left instanceof IDoubleResult) {
+            result += ((IDoubleResult) left).getValue();
+            isDoubleInstance = true;
+        } else {
+            throw new WrongTypeException("Only Integer or Double are allowed. " + left.getClass() + " was used");
+        }
+
+        if (right instanceof IIntegerResult) {
+            result %= ((IIntegerResult) right).getValue();
+        } else if (right instanceof IDoubleResult) {
+            result %= ((IDoubleResult) right).getValue();
+            isDoubleInstance = true;
+        } else {
+            throw new WrongTypeException("Only Integer or Double are allowed. " + right.getClass() + " was used");
+        }
+
+        if (isDoubleInstance) {
+            stack.push(new DoubleResult(result));
+        } else {
+            stack.push(new IntegerResult(result.intValue()));
+        }
     }
 
     @Override
