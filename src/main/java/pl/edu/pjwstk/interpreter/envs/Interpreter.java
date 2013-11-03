@@ -742,6 +742,13 @@ public class Interpreter implements IInterpreter {
         expr.getInnerExpression().accept(this);
 
         IAbstractQueryResult result = stack.pop();
+
+        List<ISingleResult> list = getResultList(result);
+        if (list.size() > 0) {
+            stack.push(new BooleanResult(true));
+        } else {
+            stack.push(new BooleanResult(false));
+        }
     }
 
     @Override
