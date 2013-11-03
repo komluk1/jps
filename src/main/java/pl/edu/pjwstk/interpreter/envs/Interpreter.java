@@ -38,7 +38,30 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitAsExpression(IAsExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+        IAbstractQueryResult result = stack.pop();
+
+        if (result instanceof ISingleResult) {
+            stack.push(new BinderResult(expr.getAuxiliaryName(), result));
+        }
+
+        if (result instanceof IBagResult) {
+            List<ISingleResult> source = new ArrayList<ISingleResult>(((IBagResult) result).getElements());
+            List<ISingleResult> resultList = new ArrayList<ISingleResult>();
+            for (ISingleResult singleResult : source) {
+                resultList.add(new BinderResult(expr.getAuxiliaryName(), singleResult));
+            }
+            stack.push(new BagResult(resultList));
+        }
+
+        if (result instanceof ISequenceResult) {
+            List<ISingleResult> source = ((ISequenceResult) result).getElements();
+            List<ISingleResult> resultList = new ArrayList<ISingleResult>();
+            for (ISingleResult singleResult : source) {
+                resultList.add(new BinderResult(expr.getAuxiliaryName(), singleResult));
+            }
+            stack.push(new SequenceResult(resultList));
+        }
     }
 
     @Override
