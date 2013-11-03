@@ -10,6 +10,10 @@ public class StructResult extends SingleResult implements IStructResult {
 
     private List<ISingleResult> elements = new ArrayList<ISingleResult>();
 
+    public StructResult() {
+
+    }
+
     public StructResult(List<ISingleResult> list) {
         elements().addAll(list);
     }
@@ -21,14 +25,14 @@ public class StructResult extends SingleResult implements IStructResult {
 
     // nie wiem jeszcze jak to ma wygladac
     public String toString() {
-        String elements ="";
-        String comma="";
-        for(ISingleResult singleResult: elements()){
-            elements+=comma+singleResult.toString();
-            comma=",";
+        String elements = "";
+        String comma = "";
+        for (ISingleResult singleResult : elements()) {
+            elements += comma + singleResult.toString();
+            comma = ",";
         }
 
-        return   "StructResult{" +
+        return "StructResult{" +
                 "elements=" + elements +
                 '}';
     }

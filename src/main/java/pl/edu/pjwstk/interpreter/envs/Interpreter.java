@@ -424,7 +424,29 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitJoinExpression(IJoinExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        BagResult eres = new BagResult();
+
+        expr.getLeftExpression().accept(this);
+        IAbstractQueryResult left = stack.pop();
+
+        for (ISingleResult el1 : getResultList(left)) {
+            this.envs.push(envs.nested(el1, this.store));
+            expr.getRightExpression().accept(this);
+            IAbstractQueryResult right = stack.pop();
+            for (ISingleResult el2 : getResultList(right)) {
+                StructResult struct = new StructResult();
+                struct.elements().add(el1);
+                if (el2 instanceof IStructResult) {
+                    struct.elements().addAll(((IStructResult) el2).elements());
+                } else {
+                    struct.elements().add(el2);
+                }
+                eres.getElements().add(struct);
+            }
+            this.envs.pop();
+        }
+
+        stack.push(eres);
     }
 
     @Override
