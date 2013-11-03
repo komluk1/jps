@@ -631,10 +631,6 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         right = doDereference(right);
 
-        if (left instanceof IStringResult || right instanceof IStringResult) {
-            stack.push(new StringResult(((IStringResult) left).getValue() + ((IStringResult) right).getValue()));
-        }
-
         boolean isDoubleInstance = false;
         Double result = 0.0;
         if (left instanceof IIntegerResult) {
@@ -778,6 +774,8 @@ public class Interpreter implements IInterpreter {
 
         if (left instanceof IStringResult || right instanceof IStringResult) {
             stack.push(new StringResult(((IStringResult) left).getValue() + ((IStringResult) right).getValue()));
+
+            return;
         }
 
         boolean isDoubleInstance = false;
