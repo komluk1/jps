@@ -129,7 +129,33 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitAnyExpression(IForAnyExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        IAbstractQueryResult left = stack.pop();
+
+        for (ISingleResult result : getResultList(left)) {
+            this.envs.push(envs.nested(result, this.store));
+            expr.getLeftExpression().accept(this);
+            IAbstractQueryResult right = stack.pop();
+            try {
+                right = getResult(right);
+            } catch (RuntimeException e) {
+                throw new WrongTypeException("Unable to retrieve a single value");
+            }
+            right = doDereference(right);
+
+            if (!(right instanceof IBooleanResult)) {
+                throw new WrongTypeException("Only Boolean is allowed");
+            }
+
+            if (!((IBooleanResult) right).getValue()) {
+                stack.push(new BooleanResult(true));
+                envs.pop();
+                return;
+            }
+        }
+
+        stack.push(new BooleanResult(false));
+        envs.pop();
     }
 
     @Override
