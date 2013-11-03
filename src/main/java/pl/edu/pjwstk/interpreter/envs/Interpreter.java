@@ -397,21 +397,29 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         List<ISingleResult> rightList = getResultList(right);
         List<ISingleResult> leftList = getResultList(left);
-        for (ISingleResult leftSingleResult : leftList) {
-            for (ISingleResult rightSingleResult : rightList) {
-                if (leftSingleResult.equals(rightSingleResult)) {
-                    break;
-                }
-            }
+
+        if (leftList.containsAll(rightList)) {
+            stack.push(new BooleanResult(true));
+        } else {
             stack.push(new BooleanResult(false));
-            return;
         }
-        stack.push(new BooleanResult(true));
     }
 
     @Override
     public void visitIntersectExpression(IIntersectExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+        right = doDereference(right);
+        left = doDereference(left);
+        List<ISingleResult> rightList = getResultList(right);
+        List<ISingleResult> leftList = getResultList(left);
+
+        leftList.retainAll(rightList);
+
+        stack.push(new BagResult(leftList));
     }
 
     @Override
