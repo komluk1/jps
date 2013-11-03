@@ -12,10 +12,7 @@ import edu.pjwstk.jps.result.*;
 import pl.edu.pjwstk.interpreter.exception.WrongTypeException;
 import pl.edu.pjwstk.interpreter.qres.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 public class Interpreter implements IInterpreter {
@@ -1053,7 +1050,7 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitStructExpression(IStructExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
@@ -1088,7 +1085,13 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitUniqueExpression(IUniqueExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getInnerExpression().accept(this);
+
+        IAbstractQueryResult result = stack.pop();
+
+        List<ISingleResult> uniqueList = new ArrayList<ISingleResult>(new LinkedHashSet<ISingleResult>(getResultList(result)));
+
+        stack.push(new BagResult(uniqueList));
     }
 
     @Override
