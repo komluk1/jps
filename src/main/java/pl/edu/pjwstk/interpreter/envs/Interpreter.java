@@ -160,7 +160,7 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitCloseByExpression(ICloseByExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // TODO to jest nie opisane w dokumencie. Trzeba się dowiedzieć jak to ma być zaimplementowane.
     }
 
     @Override
@@ -388,7 +388,25 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitInExpression(IInExpression expr) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        expr.getLeftExpression().accept(this);
+        expr.getRightExpression().accept(this);
+
+        IAbstractQueryResult right = stack.pop();
+        IAbstractQueryResult left = stack.pop();
+        right = doDereference(right);
+        left = doDereference(left);
+        List<ISingleResult> rightList = getResultList(right);
+        List<ISingleResult> leftList = getResultList(left);
+        for (ISingleResult leftSingleResult : leftList) {
+            for (ISingleResult rightSingleResult : rightList) {
+                if (leftSingleResult.equals(rightSingleResult)) {
+                    continue;
+                }
+            }
+            stack.push(new BooleanResult(false));
+            return;
+        }
+        stack.push(new BooleanResult(true));
     }
 
     @Override
