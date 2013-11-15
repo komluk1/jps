@@ -21,11 +21,11 @@ public class Interpreter implements IInterpreter {
     private ISBAStore store;
     private ENVS envs;
 
-    protected Interpreter(QresStack stack, ISBAStore store, ENVS envs) {
-        stack = this.stack;
-        store = this.store;
-        envs = this.envs;
-        envs.init(store.getEntryOID(), store);
+    public Interpreter(QresStack stack, ISBAStore store, ENVS envs) {
+        this.stack = stack;
+        this.store = store;
+        this.envs = envs;
+        this.envs.init(store.getEntryOID(), store);
     }
 
     @Override
