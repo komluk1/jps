@@ -13,11 +13,11 @@ public class NameTerminal implements INameTerminal {
 
     @Override
     public String getName() {
-        return name;  //To change body of implemented methods use File | Settings | File Templates.
+        return name;
     }
 
     @Override
     public void accept(ASTVisitor visitor) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        visitor.visitNameTerminal(this);
     }
 }

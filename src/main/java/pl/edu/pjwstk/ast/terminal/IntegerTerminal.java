@@ -12,11 +12,11 @@ public class IntegerTerminal implements IIntegerTerminal {
 
     @Override
     public Integer getValue() {
-        return value;  //To change body of implemented methods use File | Settings | File Templates.
+        return value;
     }
 
     @Override
     public void accept(ASTVisitor visitor) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        visitor.visitIntegerTerminal(this);
     }
 }

@@ -33,6 +33,6 @@ public class CollectionTerminal implements ITerminalExpression<IExpression[]> {
 
     @Override
     public void accept(ASTVisitor visitor) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // BRAK METODY W INTERFEJSIE
     }
 }
