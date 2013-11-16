@@ -1,16 +1,17 @@
 package pl.edu.pjwstk.ast.auxname;
 
 import edu.pjwstk.jps.ast.IExpression;
-import edu.pjwstk.jps.ast.auxname.IGroupAsExpression;
+import edu.pjwstk.jps.ast.auxname.IAsExpression;
 import edu.pjwstk.jps.visitor.ASTVisitor;
 
 
-public class GroupAsExpression implements IGroupAsExpression {
+public class AsExpression implements IAsExpression {
+
 
     String auxiliaryName;
     IExpression innerExpression;
 
-    public GroupAsExpression(String auxiliaryName, IExpression innerExpression) {
+    public AsExpression(String auxiliaryName, IExpression innerExpression) {
         this.auxiliaryName = auxiliaryName;
         this.innerExpression = innerExpression;
     }
@@ -27,6 +28,6 @@ public class GroupAsExpression implements IGroupAsExpression {
 
     @Override
     public void accept(ASTVisitor visitor) {
-        visitor.visitGroupAsExpression(this);
+        visitor.visitAsExpression(this);
     }
 }

@@ -24,13 +24,12 @@ public class BagResult extends CollectionResult implements IBagResult {
         return elements;
     }
 
-    // nie wiem jeszcze jak to ma wygladac
     public String toString() {
-        String elements ="";
-        String comma="";
-        for(ISingleResult singleResult: getElements()){
-            elements+=comma+singleResult.toString();
-            comma=",";
+        String elements = "";
+        String comma = "";
+        for (ISingleResult singleResult : getElements()) {
+            elements += comma + singleResult.toString();
+            comma = ",";
         }
         return "BagResult{" +
                 "elements=" + elements +
