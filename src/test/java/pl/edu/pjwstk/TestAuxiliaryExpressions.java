@@ -6,7 +6,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import pl.edu.pjwstk.ast.auxname.AsExpression;
 import pl.edu.pjwstk.ast.auxname.GroupAsExpression;
+import pl.edu.pjwstk.ast.binary.CommaExpression;
 import pl.edu.pjwstk.ast.terminal.IntegerTerminal;
+import pl.edu.pjwstk.ast.unary.BagExpression;
 import pl.edu.pjwstk.datastore.SBAStore;
 import pl.edu.pjwstk.interpreter.envs.ENVS;
 import pl.edu.pjwstk.interpreter.envs.Interpreter;
@@ -61,7 +63,14 @@ public class TestAuxiliaryExpressions
         assertTrue(((IntegerResult) ((BinderResult) result).getValue()).getValue() == 2);
         assertEquals(((BinderResult) result).getName(), "dwa");
 
-        // TODO sprawdzić IBagResult oraz ISequenceResult
+        asExpression = new AsExpression("dwa_i_trzy", new BagExpression(new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(3))));
+        asExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BagResult);
+        IAbstractQueryResult element = ((BagResult) result).getElements().iterator().next();
+        assertTrue(element instanceof BinderResult);
+        assertEquals(((BinderResult) element).getName(), "dwa_i_trzy");
     }
 
     public void testGroupAsExpression(){
