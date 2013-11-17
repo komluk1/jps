@@ -968,12 +968,13 @@ public class Interpreter implements IInterpreter {
                 int value = ((IIntegerResult) element).getValue();
                 if (max < value) {
                     max = value;
+                    isDoubleInstance = false;
                 }
             } else if (element instanceof IDoubleResult) {
                 Double value = ((IDoubleResult) element).getValue();
-                isDoubleInstance = true;
                 if (max < value) {
                     max = value;
+                    isDoubleInstance = true;
                 }
             } else {
                 throw new WrongTypeException("Only Integer or Double are allowed. " + element.getClass() + " was used");
@@ -1008,12 +1009,13 @@ public class Interpreter implements IInterpreter {
                 int value = ((IIntegerResult) element).getValue();
                 if (min > value) {
                     min = value;
+                    isDoubleInstance = false;
                 }
             } else if (element instanceof IDoubleResult) {
                 Double value = ((IDoubleResult) element).getValue();
-                isDoubleInstance = true;
                 if (min > value) {
                     min = value;
+                    isDoubleInstance = true;
                 }
             } else {
                 throw new WrongTypeException("Only Integer or Double are allowed. " + element.getClass() + " was used");
@@ -1041,16 +1043,22 @@ public class Interpreter implements IInterpreter {
 
         result = doDereference(result);
 
-        if (result instanceof IBooleanResult) {
-            stack.push(new BooleanResult(((IBooleanResult) result).getValue()));
+        if (!(result instanceof IBooleanResult)) {
+            throw new WrongTypeException("Illegal type for operation");
         }
 
-        throw new WrongTypeException("Illegal type for operation");
+        stack.push(new BooleanResult(!((IBooleanResult) result).getValue()));
     }
 
     @Override
     public void visitStructExpression(IStructExpression expr) {
-
+        expr.getInnerExpression().accept(this);
+        IAbstractQueryResult res = stack.pop();
+        if (res instanceof IStructResult) {
+            stack.push(res);
+        } else {
+            stack.push(new StructResult(getResultList(res)));
+        }
     }
 
     @Override
@@ -1096,6 +1104,28 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitAvgExpression(IAvgExpression expr) {
+        expr.getInnerExpression().accept(this);
+
+        IAbstractQueryResult result = stack.pop();
+        List<ISingleResult> eres = getResultList(result);
+
+        if (eres.size() == 0) {
+            stack.push(new DoubleResult(0.0));
+            return;
+        }
+
+        double avg = 0;
+        for (ISingleResult singleResult : eres) {
+            if (singleResult instanceof IIntegerResult) {
+                avg += ((IIntegerResult) singleResult).getValue();
+            } else if (singleResult instanceof IDoubleResult) {
+                avg += ((IDoubleResult) singleResult).getValue();
+            } else {
+                throw new WrongTypeException("Only Integer or Double are allowed. " + singleResult.getClass() + " was used");
+            }
+        }
+        avg /= eres.size();
+        stack.push(new DoubleResult(avg));
     }
 
     private ISingleResult getResult(IAbstractQueryResult result) {
@@ -1161,11 +1191,23 @@ public class Interpreter implements IInterpreter {
         }
 
         if (result instanceof IBagResult) {
-            results.addAll(((IBagResult) result).getElements());
+            for (ISingleResult singleResult : ((IBagResult) result).getElements()) {
+                if (singleResult instanceof IStructResult) {
+                    results.addAll(((IStructResult) singleResult).elements());
+                } else {
+                    results.add(singleResult);
+                }
+            }
         }
 
         if (result instanceof ISequenceResult) {
-            results.addAll(((ISequenceResult) result).getElements());
+            for (ISingleResult singleResult : ((ISequenceResult) result).getElements()) {
+                if (singleResult instanceof IStructResult) {
+                    results.addAll(((IStructResult) singleResult).elements());
+                } else {
+                    results.add(singleResult);
+                }
+            }
         }
 
         return results;

@@ -5,6 +5,7 @@ import edu.pjwstk.jps.ast.unary.IBagExpression;
 import edu.pjwstk.jps.visitor.ASTVisitor;
 
 public class BagExpression extends UnaryExpression implements  IBagExpression {
+
     public BagExpression(IExpression innerExpression) {
         super(innerExpression);
     }

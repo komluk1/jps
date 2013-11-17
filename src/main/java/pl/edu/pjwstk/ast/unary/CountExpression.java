@@ -6,14 +6,12 @@ import edu.pjwstk.jps.visitor.ASTVisitor;
 
 public class CountExpression extends UnaryExpression implements ICountExpression {
 
-
     public CountExpression(IExpression innerExpression) {
         super(innerExpression);
     }
 
-
     @Override
     public void accept(ASTVisitor visitor) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        visitor.visitCountExpression(this);
     }
 }
