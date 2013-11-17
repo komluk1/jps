@@ -8,6 +8,7 @@ import pl.edu.pjwstk.ast.binary.*;
 import pl.edu.pjwstk.ast.terminal.BooleanTerminal;
 import pl.edu.pjwstk.ast.terminal.DoubleTerminal;
 import pl.edu.pjwstk.ast.terminal.IntegerTerminal;
+import pl.edu.pjwstk.ast.terminal.StringTerminal;
 import pl.edu.pjwstk.ast.unary.*;
 import pl.edu.pjwstk.datastore.SBAStore;
 import pl.edu.pjwstk.interpreter.envs.ENVS;
@@ -303,5 +304,147 @@ public class TestBinaryExpressions
         IAbstractQueryResult element = ((BagResult) result).getElements().iterator().next();
         assertTrue(element instanceof IntegerResult);
         assertTrue(((IntegerResult) element).getValue() == 3);
+    }
+
+    public void testModuloExpression() {
+        ModuloExpression moduloExpression = new ModuloExpression(new IntegerTerminal(10), new DoubleTerminal(2.0));
+        moduloExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof DoubleResult);
+        assertEquals(0.0, ((DoubleResult) result).getValue());
+
+        moduloExpression = new ModuloExpression(new IntegerTerminal(3), new IntegerTerminal(2));
+        moduloExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof IntegerResult);
+        assertTrue(((IntegerResult) result).getValue() == 1);
+    }
+
+    public void testMultiplyExpression() {
+        MultiplyExpression multiplyExpression = new MultiplyExpression(new IntegerTerminal(10), new DoubleTerminal(2.0));
+        multiplyExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof DoubleResult);
+        assertEquals(20.0, ((DoubleResult) result).getValue());
+
+        multiplyExpression = new MultiplyExpression(new IntegerTerminal(3), new IntegerTerminal(2));
+        multiplyExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof IntegerResult);
+        assertTrue(((IntegerResult) result).getValue() == 6);
+    }
+
+    public void testNotEqualsExpression() {
+        NotEqualsExpression equalsExpression = new NotEqualsExpression(new IntegerTerminal(2), new IntegerTerminal(2));
+        equalsExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+
+        equalsExpression = new NotEqualsExpression(new DoubleTerminal(2.0), new IntegerTerminal(2));
+        equalsExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+    }
+
+    public void testOrExpression() {
+        OrExpression andExpression = new OrExpression(new BooleanTerminal(true), new BooleanTerminal(false));
+        andExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        andExpression = new OrExpression(new BooleanTerminal(false), new BooleanTerminal(false));
+        andExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+    }
+
+    public void testPlusExpression() {
+        PlusExpression plusExpression = new PlusExpression(new IntegerTerminal(2), new DoubleTerminal(2.0));
+        plusExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof DoubleResult);
+        assertEquals(4.0, ((DoubleResult) result).getValue());
+
+        plusExpression = new PlusExpression(new IntegerTerminal(2), new IntegerTerminal(1));
+        plusExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof IntegerResult);
+        assertTrue(((IntegerResult) result).getValue() == 3);
+
+        plusExpression = new PlusExpression(new StringTerminal("Hello "), new StringTerminal("World!"));
+        plusExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof StringResult);
+        assertTrue(((StringResult) result).getValue().equals("Hello World!"));
+    }
+
+    public void testUnionExpression() {
+        UnionExpression unionExpression = new UnionExpression(new IntegerTerminal(2), new DoubleTerminal(2.0));
+        unionExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BagResult);
+        assertEquals(2, ((BagResult) result).getElements().size());
+    }
+
+    public void testWhereExpression() {
+        WhereExpression whereExpression = new WhereExpression(new IntegerTerminal(2), new BooleanTerminal(true));
+        whereExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BagResult);
+        assertEquals(1, ((BagResult) result).getElements().size());
+
+        whereExpression = new WhereExpression(new IntegerTerminal(2), new BooleanTerminal(false));
+        whereExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BagResult);
+        assertEquals(0, ((BagResult) result).getElements().size());
+    }
+
+    public void testXORExpression() {
+        XORExpression xorExpression = new XORExpression(new BooleanTerminal(true), new BooleanTerminal(true));
+        xorExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+
+        xorExpression = new XORExpression(new BooleanTerminal(false), new BooleanTerminal(true));
+        xorExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        xorExpression = new XORExpression(new BooleanTerminal(true), new BooleanTerminal(false));
+        xorExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        xorExpression = new XORExpression(new BooleanTerminal(false), new BooleanTerminal(false));
+        xorExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
     }
 }
