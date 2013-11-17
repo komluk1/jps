@@ -5,6 +5,7 @@ import edu.pjwstk.jps.ast.binary.ICommaExpression;
 import edu.pjwstk.jps.visitor.ASTVisitor;
 
 public class CommaExpression extends BinaryExpression implements ICommaExpression {
+
     public CommaExpression(IExpression leftExpression, IExpression rightExpression) {
         super(leftExpression, rightExpression);
     }

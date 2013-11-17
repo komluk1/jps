@@ -10,10 +10,8 @@ public class WhereExpression extends BinaryExpression implements IWhereExpressio
         super(leftExpression, rightExpression);
     }
 
-
     @Override
     public void accept(ASTVisitor visitor) {
-
-
+        visitor.visitWhereExpression(this);
     }
 }

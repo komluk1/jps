@@ -14,7 +14,6 @@ import pl.edu.pjwstk.interpreter.qres.*;
 
 import java.util.*;
 
-
 public class Interpreter implements IInterpreter {
 
     private QresStack stack;
