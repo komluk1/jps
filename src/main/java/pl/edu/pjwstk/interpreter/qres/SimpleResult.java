@@ -7,11 +7,11 @@ public class SimpleResult<T> extends SingleResult implements ISimpleResult<T> {
 
     private T value;
 
-    public SimpleResult(IOID ioid){
+    public SimpleResult(IOID ioid) {
         super(ioid);
     }
 
-    public SimpleResult(T value){
+    public SimpleResult(T value) {
         this.value = value;
     }
 
@@ -25,9 +25,12 @@ public class SimpleResult<T> extends SingleResult implements ISimpleResult<T> {
         return value;
     }
 
-
     @Override
     public String toString() {
-        return ""+value;
+        return "" + value;
+    }
+
+    public boolean equals(Object o) {
+        return this == o;
     }
 }

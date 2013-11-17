@@ -23,7 +23,6 @@ public class SequenceResult extends CollectionResult implements ISequenceResult 
         return elements;
     }
 
-    // nie wiem jeszcze jak to ma wygladac
     public String toString() {
         return "SequenceResult{" +
                 "elements=" + getElements().toString() +

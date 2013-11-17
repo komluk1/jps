@@ -22,4 +22,8 @@ public class DoubleResult extends SimpleResult<Double> implements IDoubleResult 
                 "value=" + getValue() +
                 '}';
     }
+
+    public boolean equals(Object o) {
+        return o == this || o instanceof DoubleResult && (((DoubleResult) o).getValue().equals(this.getValue()));
+    }
 }

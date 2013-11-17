@@ -74,7 +74,7 @@ public class Interpreter implements IInterpreter {
 
         for (ISingleResult result : getResultList(left)) {
             this.envs.push(envs.nested(result, this.store));
-            expr.getLeftExpression().accept(this);
+            expr.getRightExpression().accept(this);
             IAbstractQueryResult right = stack.pop();
             try {
                 right = getResult(right);
@@ -130,7 +130,7 @@ public class Interpreter implements IInterpreter {
 
         for (ISingleResult result : getResultList(left)) {
             this.envs.push(envs.nested(result, this.store));
-            expr.getLeftExpression().accept(this);
+            expr.getRightExpression().accept(this);
             IAbstractQueryResult right = stack.pop();
             try {
                 right = getResult(right);
@@ -143,7 +143,7 @@ public class Interpreter implements IInterpreter {
                 throw new WrongTypeException("Only Boolean is allowed");
             }
 
-            if (!((IBooleanResult) right).getValue()) {
+            if (((IBooleanResult) right).getValue()) {
                 stack.push(new BooleanResult(true));
                 envs.pop();
                 return;
@@ -320,10 +320,14 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         right = doDereference(right);
 
+        if (right.getClass() != left.getClass()) {
+            throw new RuntimeException("Cannot compare two different instances");
+        }
+
         if (left instanceof IStringResult && right instanceof IStringResult) {
             int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
 
-            if (result < 0) {
+            if (result > 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -334,7 +338,7 @@ public class Interpreter implements IInterpreter {
         if (left instanceof IIntegerResult && right instanceof IIntegerResult) {
             int result = ((IIntegerResult) left).getValue().compareTo(((IIntegerResult) right).getValue());
 
-            if (result < 0) {
+            if (result > 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -345,7 +349,7 @@ public class Interpreter implements IInterpreter {
         if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
             int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
 
-            if (result < 0) {
+            if (result > 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -371,10 +375,14 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         right = doDereference(right);
 
+        if (right.getClass() != left.getClass()) {
+            throw new RuntimeException("Cannot compare two different instances");
+        }
+
         if (left instanceof IStringResult && right instanceof IStringResult) {
             int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
 
-            if (result <= 0) {
+            if (result >= 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -385,7 +393,7 @@ public class Interpreter implements IInterpreter {
         if (left instanceof IIntegerResult && right instanceof IIntegerResult) {
             int result = ((IIntegerResult) left).getValue().compareTo(((IIntegerResult) right).getValue());
 
-            if (result <= 0) {
+            if (result >= 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -396,12 +404,14 @@ public class Interpreter implements IInterpreter {
         if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
             int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
 
-            if (result <= 0) {
+            if (result >= 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
             }
         }
+
+        stack.push(new BooleanResult(false));
     }
 
     @Override
@@ -485,10 +495,14 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         right = doDereference(right);
 
+        if (right.getClass() != left.getClass()) {
+            throw new RuntimeException("Cannot compare two different instances");
+        }
+
         if (left instanceof IStringResult && right instanceof IStringResult) {
             int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
 
-            if (result >= 0) {
+            if (result <= 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -499,7 +513,7 @@ public class Interpreter implements IInterpreter {
         if (left instanceof IIntegerResult && right instanceof IIntegerResult) {
             int result = ((IIntegerResult) left).getValue().compareTo(((IIntegerResult) right).getValue());
 
-            if (result >= 0) {
+            if (result <= 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -510,7 +524,7 @@ public class Interpreter implements IInterpreter {
         if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
             int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
 
-            if (result >= 0) {
+            if (result <= 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -536,10 +550,14 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         right = doDereference(right);
 
+        if (right.getClass() != left.getClass()) {
+            throw new RuntimeException("Cannot compare two different instances");
+        }
+
         if (left instanceof IStringResult && right instanceof IStringResult) {
             int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
 
-            if (result > 0) {
+            if (result < 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -550,7 +568,7 @@ public class Interpreter implements IInterpreter {
         if (left instanceof IIntegerResult && right instanceof IIntegerResult) {
             int result = ((IIntegerResult) left).getValue().compareTo(((IIntegerResult) right).getValue());
 
-            if (result > 0) {
+            if (result < 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
@@ -561,7 +579,7 @@ public class Interpreter implements IInterpreter {
         if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
             int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
 
-            if (result > 0) {
+            if (result < 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));

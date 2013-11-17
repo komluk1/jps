@@ -112,4 +112,196 @@ public class TestBinaryExpressions
         assertTrue(((IntegerResult) intResult).getValue() == 4);
     }
 
+    public void testEqualsExpression() {
+        EqualsExpression equalsExpression = new EqualsExpression(new IntegerTerminal(2), new IntegerTerminal(2));
+        equalsExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        equalsExpression = new EqualsExpression(new DoubleTerminal(2.0), new IntegerTerminal(2));
+        equalsExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+    }
+
+    public void testForAllExpression() {
+        ForAllExpression forAll = new ForAllExpression(new BooleanTerminal(true), new BooleanTerminal(true));
+        forAll.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        forAll = new ForAllExpression(new BooleanTerminal(true), new BooleanTerminal(false));
+        forAll.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+    }
+
+    public void testForAnyExpression() {
+        ForAnyExpression forAny = new ForAnyExpression(new BooleanTerminal(false), new BooleanTerminal(true));
+        forAny.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        forAny = new ForAnyExpression(new BooleanTerminal(false), new BooleanTerminal(false));
+        forAny.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+    }
+
+    public void testGreaterOrEqualThanExpression() {
+        GreaterOrEqualThanExpression greaterOrEqualThanExpression = new GreaterOrEqualThanExpression(new IntegerTerminal(2), new IntegerTerminal(2));
+        greaterOrEqualThanExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        greaterOrEqualThanExpression = new GreaterOrEqualThanExpression(new IntegerTerminal(3), new IntegerTerminal(2));
+        greaterOrEqualThanExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        greaterOrEqualThanExpression = new GreaterOrEqualThanExpression(new DoubleTerminal(1.0), new DoubleTerminal(2.0));
+        greaterOrEqualThanExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+    }
+
+    public void testGreaterThanExpression() {
+        GreaterThanExpression greaterThanExpression = new GreaterThanExpression(new IntegerTerminal(2), new IntegerTerminal(2));
+        greaterThanExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+
+        greaterThanExpression = new GreaterThanExpression(new IntegerTerminal(3), new IntegerTerminal(2));
+        greaterThanExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        greaterThanExpression = new GreaterThanExpression(new DoubleTerminal(1.0), new DoubleTerminal(2.0));
+        greaterThanExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+    }
+
+    public void testInExpression() {
+        InExpression inExpression = new InExpression(new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(3)), new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(3)));
+        inExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        inExpression = new InExpression(new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(3)), new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(0)));
+        inExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+    }
+
+    public void testJoinExpression() {
+        JoinExpression joinExpression = new JoinExpression(new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(3)), new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(3)));
+        joinExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BagResult);
+        assertTrue(((BagResult) result).getElements().size() == 4);
+    }
+
+    public void testLessOrEqualThanExpression() {
+        LessOrEqualThanExpression lessOrEqualThanExpression = new LessOrEqualThanExpression(new IntegerTerminal(2), new IntegerTerminal(2));
+        lessOrEqualThanExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+
+        lessOrEqualThanExpression = new LessOrEqualThanExpression(new IntegerTerminal(3), new IntegerTerminal(2));
+        lessOrEqualThanExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+
+        lessOrEqualThanExpression = new LessOrEqualThanExpression(new DoubleTerminal(1.0), new DoubleTerminal(2.0));
+        lessOrEqualThanExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+    }
+
+    public void testLessThanExpression() {
+        LessThanExpression lessOrEqualThanExpression = new LessThanExpression(new IntegerTerminal(2), new IntegerTerminal(2));
+        lessOrEqualThanExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+
+        lessOrEqualThanExpression = new LessThanExpression(new IntegerTerminal(3), new IntegerTerminal(2));
+        lessOrEqualThanExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertFalse(((BooleanResult) result).getValue());
+
+        lessOrEqualThanExpression = new LessThanExpression(new DoubleTerminal(1.0), new DoubleTerminal(2.0));
+        lessOrEqualThanExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof BooleanResult);
+        assertTrue(((BooleanResult) result).getValue());
+    }
+
+    public void testMinusExpression() {
+        MinusExpression minusExpression = new MinusExpression(new IntegerTerminal(2), new DoubleTerminal(2.0));
+        minusExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof DoubleResult);
+        assertEquals(0.0, ((DoubleResult) result).getValue());
+
+        minusExpression = new MinusExpression(new IntegerTerminal(2), new IntegerTerminal(1));
+        minusExpression.accept(interpreter);
+        result = stack.pop();
+
+        assertTrue(result instanceof IntegerResult);
+        assertTrue(((IntegerResult) result).getValue() == 1);
+    }
+
+    public void testMinusSetExpression() {
+        MinusSetExpression minusSetExpression = new MinusSetExpression(new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(3)), new CommaExpression(new IntegerTerminal(2), new IntegerTerminal(1)));
+        minusSetExpression.accept(interpreter);
+        IAbstractQueryResult result = stack.pop();
+
+        assertTrue(result instanceof BagResult);
+        assertEquals(1, ((BagResult) result).getElements().size());
+        IAbstractQueryResult element = ((BagResult) result).getElements().iterator().next();
+        assertTrue(element instanceof IntegerResult);
+        assertTrue(((IntegerResult) element).getValue() == 3);
+    }
 }

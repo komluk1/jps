@@ -23,7 +23,6 @@ public class StructResult extends SingleResult implements IStructResult {
         return elements;
     }
 
-    // nie wiem jeszcze jak to ma wygladac
     public String toString() {
         String elements = "";
         String comma = "";

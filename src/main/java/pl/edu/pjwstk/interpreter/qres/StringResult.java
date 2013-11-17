@@ -22,4 +22,8 @@ public class StringResult extends SimpleResult<String> implements IStringResult 
                 "value=" + getValue() +
                 '}';
     }
+
+    public boolean equals(Object o) {
+        return o == this || o instanceof StringResult && (((StringResult) o).getValue().equals(this.getValue()));
+    }
 }

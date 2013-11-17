@@ -22,4 +22,8 @@ public class BooleanResult extends SimpleResult<Boolean> implements IBooleanResu
                 "value=" + getValue() +
                 '}';
     }
+
+    public boolean equals(Object o) {
+        return o == this || o instanceof BooleanResult && (((BooleanResult) o).getValue().equals(this.getValue()));
+    }
 }
