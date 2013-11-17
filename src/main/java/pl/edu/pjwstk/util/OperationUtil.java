@@ -11,105 +11,91 @@ import pl.edu.pjwstk.interpreter.qres.StructResult;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Piotr Sukiennik
- * Date: 12.10.13
- * Time: 14:03
- * To change this template use File | Settings | File Templates.
- */
+
 public class OperationUtil {
 
-
-
-
-
-    public static BinderResult as(String name, IAbstractQueryResult singleResult){
-        if (singleResult instanceof BagResult){
+    public static BinderResult as(String name, IAbstractQueryResult singleResult) {
+        if (singleResult instanceof BagResult) {
             List<ISingleResult> singleResults = new ArrayList<ISingleResult>();
-            for (ISingleResult result: ((BagResult) singleResult).getElements()){
-                singleResults.add(new BinderResult(name,result));
+            for (ISingleResult result : ((BagResult) singleResult).getElements()) {
+                singleResults.add(new BinderResult(name, result));
             }
-            return  new BinderResult(name,new StructResult(singleResults));
+            return new BinderResult(name, new StructResult(singleResults));
 
-        }   else {
-            return new BinderResult(name,singleResult);
+        } else {
+            return new BinderResult(name, singleResult);
         }
     }
 
-    public static BinderResult groupAs(String name, IAbstractQueryResult singleResult){
-        return new BinderResult(name,singleResult);
+    public static BinderResult groupAs(String name, IAbstractQueryResult singleResult) {
+        return new BinderResult(name, singleResult);
     }
 
     public static IStructResult comma(IAbstractQueryResult singleResultLeft, IAbstractQueryResult singleResultRight) {
-        if (singleResultLeft instanceof IBagResult){
-            if (singleResultRight instanceof IBagResult){
-                return comma((IBagResult) singleResultLeft,(IBagResult) singleResultRight);
+        if (singleResultLeft instanceof IBagResult) {
+            if (singleResultRight instanceof IBagResult) {
+                return comma((IBagResult) singleResultLeft, (IBagResult) singleResultRight);
             }
-            return comma((IBagResult) singleResultLeft,singleResultRight);
-        }  else if (singleResultRight instanceof IBagResult){
-            return comma(singleResultLeft,(IBagResult) singleResultRight);
+            return comma((IBagResult) singleResultLeft, singleResultRight);
+        } else if (singleResultRight instanceof IBagResult) {
+            return comma(singleResultLeft, (IBagResult) singleResultRight);
         }
 
 
         List<ISingleResult> singleResults = new ArrayList<ISingleResult>();
-        if (singleResultLeft instanceof StructResult){
+        if (singleResultLeft instanceof StructResult) {
             singleResults.addAll(((StructResult) singleResultLeft).elements());
-        }   else if (singleResultLeft instanceof ISingleResult) {
-            singleResults.add((ISingleResult)singleResultLeft);
+        } else if (singleResultLeft instanceof ISingleResult) {
+            singleResults.add((ISingleResult) singleResultLeft);
         }
-        if (singleResultRight instanceof StructResult){
+        if (singleResultRight instanceof StructResult) {
             singleResults.addAll(((StructResult) singleResultRight).elements());
-        }   else if (singleResultRight instanceof ISingleResult){
-            singleResults.add((ISingleResult)singleResultRight);
+        } else if (singleResultRight instanceof ISingleResult) {
+            singleResults.add((ISingleResult) singleResultRight);
         }
         return new StructResult(singleResults);
     }
 
     public static IStructResult comma(IBagResult singleResultLeft, IAbstractQueryResult singleResultRight) {
         List<ISingleResult> resultsForbag = new ArrayList<ISingleResult>();
-        for (ISingleResult singleResult: singleResultLeft.getElements()){
+        for (ISingleResult singleResult : singleResultLeft.getElements()) {
             List<ISingleResult> resultsForStruct = new ArrayList<ISingleResult>();
             resultsForStruct.add(singleResult);
-            if (singleResultRight instanceof StructResult){
+            if (singleResultRight instanceof StructResult) {
                 resultsForStruct.addAll(((StructResult) singleResultRight).elements());
-            }  else if (singleResultRight instanceof ISingleResult) {
-                resultsForStruct.add((ISingleResult)singleResultRight);
+            } else if (singleResultRight instanceof ISingleResult) {
+                resultsForStruct.add((ISingleResult) singleResultRight);
             }
             resultsForbag.add(new StructResult(resultsForStruct));
         }
-        return  new StructResult(resultsForbag);
+        return new StructResult(resultsForbag);
     }
 
     public static IStructResult comma(IAbstractQueryResult singleResultLeft, IBagResult singleResultRight) {
         List<ISingleResult> resultsForbag = new ArrayList<ISingleResult>();
-        for (ISingleResult singleResult: singleResultRight.getElements()){
+        for (ISingleResult singleResult : singleResultRight.getElements()) {
             List<ISingleResult> resultsForStruct = new ArrayList<ISingleResult>();
-            if (singleResultLeft instanceof StructResult){
+            if (singleResultLeft instanceof StructResult) {
                 resultsForStruct.addAll(((StructResult) singleResultLeft).elements());
-            } else if (singleResultRight instanceof ISingleResult){
-                resultsForStruct.add((ISingleResult)singleResultLeft);
+            } else if (singleResultRight instanceof ISingleResult) {
+                resultsForStruct.add((ISingleResult) singleResultLeft);
             }
             resultsForStruct.add(singleResult);
             resultsForbag.add(new StructResult(resultsForStruct));
         }
-        return  new StructResult(resultsForbag);
+        return new StructResult(resultsForbag);
     }
+
     public static IStructResult comma(IBagResult bagLeft, IBagResult bagRight) {
         List<ISingleResult> resultsForbag = new ArrayList<ISingleResult>();
-        for (ISingleResult singleResultLeft: bagLeft.getElements()){
-            for (ISingleResult singleResultRight: bagRight.getElements()){
+        for (ISingleResult singleResultLeft : bagLeft.getElements()) {
+            for (ISingleResult singleResultRight : bagRight.getElements()) {
                 List<ISingleResult> resultsForStruct = new ArrayList<ISingleResult>();
                 resultsForStruct.add(singleResultLeft);
                 resultsForStruct.add(singleResultRight);
                 resultsForbag.add(new StructResult(resultsForStruct));
             }
         }
-        return  new StructResult(resultsForbag);
+        return new StructResult(resultsForbag);
     }
-
-
-
-
-
 }
