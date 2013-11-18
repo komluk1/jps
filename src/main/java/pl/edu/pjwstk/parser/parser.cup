@@ -267,10 +267,10 @@ identifier_literal	::=
 
 	;
 literal_expression ::=
-		INTEGER_LITERAL:l {: RESULT = new IntegerTerminal( (Integer)l); :}
-	|	DOUBLE_LITERAL:l  {: RESULT = new DoubleTerminal( (Double)l); :}
-	|	BOOLEAN_LITERAL:l {: RESULT = new BooleanTerminal( (Boolean)l); :}
-	|	STRING_LITERAL:l {: RESULT = new StringTerminal( (String)l); :}
+		INTEGER_LITERAL:l {: RESULT = new IntegerTerminal( l); :}
+	|	DOUBLE_LITERAL:l  {: RESULT = new DoubleTerminal( l); :}
+	|	BOOLEAN_LITERAL:l {: RESULT = new BooleanTerminal( l); :}
+	|	STRING_LITERAL:l {: RESULT = new StringTerminal( l); :}
 //	|	CHAR_LITERAL:l {: RESULT = new LiteralExpression<Character>(parser.getCurrentPos(), (Character)l); :}
 	;
 
