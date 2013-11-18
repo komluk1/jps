@@ -3,6 +3,7 @@ package pl.edu.pjwstk.ast.auxname;
 import edu.pjwstk.jps.ast.IExpression;
 import edu.pjwstk.jps.ast.auxname.IGroupAsExpression;
 import edu.pjwstk.jps.visitor.ASTVisitor;
+import pl.edu.pjwstk.ast.terminal.NameTerminal;
 
 
 public class GroupAsExpression implements IGroupAsExpression {
@@ -14,7 +15,9 @@ public class GroupAsExpression implements IGroupAsExpression {
         this.auxiliaryName = auxiliaryName;
         this.innerExpression = innerExpression;
     }
-
+    public GroupAsExpression(NameTerminal auxiliaryName, IExpression innerExpression) {
+        this(auxiliaryName.getName(),innerExpression);
+    }
     @Override
     public String getAuxiliaryName() {
         return auxiliaryName;

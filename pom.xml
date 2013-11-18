@@ -28,7 +28,14 @@
                     <mainClass>java_cup.Main</mainClass>
                     <classpathScope>test</classpathScope>
                     <arguments>
-                        <argument>C:\Users\Piotr Sukiennik\Documents\GitHub\jps\src\main\resources\parser.cup</argument>
+                        <argument>-package</argument>
+                        <argument>pl.edu.pjwstk.parser</argument>
+                        <argument>-parser</argument>
+                        <argument>ParserCup</argument>
+                        <argument>-symbols</argument>
+                        <argument>ParserSymbols</argument>
+                        <argument>-interface</argument>
+                        <argument>src/main/java/pl/edu/pjwstk/parser/parser.cup</argument>
                     </arguments>
                 </configuration>
             </plugin>
@@ -37,9 +44,9 @@
                 <artifactId>maven-jflex-plugin</artifactId>
                 <version>1.4.3</version>
                 <configuration>
-                    <outputDirectory>src/main/java</outputDirectory>
+                    <outputDirectory>src/main/java/</outputDirectory>
                     <lexDefinitions>
-                        <lexDefinition>src/main/resources/Lexer.lex</lexDefinition>
+                        <lexDefinition>src/main/java/pl/edu/pjwstk/parser/Lexer.lex</lexDefinition>
                     </lexDefinitions>
                 </configuration>
                 <executions>
@@ -47,7 +54,6 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
-
                     </execution>
                 </executions>
             </plugin>

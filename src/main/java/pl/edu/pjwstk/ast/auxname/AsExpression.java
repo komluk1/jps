@@ -3,6 +3,7 @@ package pl.edu.pjwstk.ast.auxname;
 import edu.pjwstk.jps.ast.IExpression;
 import edu.pjwstk.jps.ast.auxname.IAsExpression;
 import edu.pjwstk.jps.visitor.ASTVisitor;
+import pl.edu.pjwstk.ast.terminal.NameTerminal;
 
 
 public class AsExpression implements IAsExpression {
@@ -14,6 +15,9 @@ public class AsExpression implements IAsExpression {
     public AsExpression(String auxiliaryName, IExpression innerExpression) {
         this.auxiliaryName = auxiliaryName;
         this.innerExpression = innerExpression;
+    }
+    public AsExpression(NameTerminal auxiliaryName, IExpression innerExpression) {
+        this(auxiliaryName.getName(),innerExpression);
     }
 
     @Override

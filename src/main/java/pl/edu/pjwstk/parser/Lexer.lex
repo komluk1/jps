@@ -1,9 +1,8 @@
 package pl.edu.pjwstk.parser;
   
 import java_cup.runtime.Symbol;
-import pl.wcislo.sbql4j.lang.parser.SBQLSymbolFactory;
 
-import static pl.wcislo.sbql4j.lang.parser.ParserSym.*;
+import static pl.edu.pjwstk.parser.ParserSymbols.*;
  
 
 
@@ -11,14 +10,13 @@ import static pl.wcislo.sbql4j.lang.parser.ParserSym.*;
 %{ 
         private StringBuffer str;
 //      private String identifier;
-        private SBQLSymbolFactory sf = new SBQLSymbolFactory();
-        
-        private Token createToken(int id) {
+
+        private Symbol createToken(int id) {
                 return createToken(id, yytext());
         }
         
-        private Token createToken(int id, Object o) {
-                return new Token(id, yyline, yycolumn, new SyntaxTreeNode(o, yychar));
+        private Symbol createToken(int id, Object o) {
+                return new Symbol(id,o);
         }
         
         public int getPos() {
@@ -33,7 +31,7 @@ import static pl.wcislo.sbql4j.lang.parser.ParserSym.*;
 %column
 %char
 %eofval{
-        return createToken(ParserSym.EOF);
+        return createToken(EOF);
 %eofval}
 
 INTEGER = [0-9]+
@@ -154,12 +152,12 @@ WHITESPACE = {LineTerminator} | [ \t\f]
          
 
         {IDENTIFIER} {  
-                Token t = createToken(ParserSym.IDENTIFIER);
+                Symbol t = createToken(IDENTIFIER);
                 return t;
         }
         
         {SPEC_IDENTIFIER} {
-                Token t = createToken(ParserSym.IDENTIFIER);
+                Symbol t = createToken(IDENTIFIER);
                 return t;
         }
 
