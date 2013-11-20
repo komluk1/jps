@@ -55,7 +55,7 @@ public class TestCw3
      <i13, tytul, „Pan Tadeusz”> (StringObject)
      */
     public void test1(){
-       URL url =  getClass().getClassLoader().getResource("TestCw3_test1.xml");
+        URL url =  getClass().getClassLoader().getResource("TestCw3_test1.xml");
         SBAStore sbaStore = new SBAStore();
         sbaStore.loadXML(url.getPath());
         System.out.println(sbaStore.toString());

@@ -117,7 +117,8 @@ public class Interpreter implements IInterpreter {
         right = doDereference(right);
 
         if (!(left instanceof IBooleanResult && right instanceof IBooleanResult)) {
-            throw new WrongTypeException("Only Boolean is allowed");
+            //throw new WrongTypeException("Only Boolean is allowed");
+            stack.push(new BooleanResult(false));
         }
 
         stack.push(new BooleanResult(((IBooleanResult) left).getValue() && ((IBooleanResult) right).getValue()));

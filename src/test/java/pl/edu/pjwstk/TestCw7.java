@@ -61,6 +61,7 @@ public class TestCw7
         interpreter = new Interpreter(stack, store, new ENVS());
     }
     private String[] queries = {
+            "all 1 true",
             "true",
             "true and false",
             "true or false",
@@ -69,10 +70,16 @@ public class TestCw7
             "1+2",
             "5",
             "(3*(5-2))==9",
-            "integerNumber"
+            "all (bag(1, bag(2,3) group as wew) as num) (num == 2)",
+            "all emp married",
+            "booleanValue and true",
+            "false and true and 1",
+            "any 1 true",
+            "any emp married"
 
     };
     private IAbstractQueryResult[] results = {
+            new BooleanResult(true),
             new BooleanResult(true),
             new BooleanResult(false),
             new BooleanResult(true),
@@ -81,7 +88,12 @@ public class TestCw7
             new IntegerResult(3),
             new IntegerResult(5),
             new BooleanResult(true),
-            new ReferenceResult(null),
+            new BooleanResult(true),
+            new BooleanResult(true),
+            new BooleanResult(true),
+            new BooleanResult(false),
+            new BooleanResult(true),
+            new BooleanResult(true)
     };
     public void testAll() {
         int passed = 0;
