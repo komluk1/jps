@@ -72,7 +72,7 @@ public class Interpreter implements IInterpreter {
         expr.getLeftExpression().accept(this);
         IAbstractQueryResult left = stack.pop();
 
-        for (ISingleResult result : getResultList(left)) {
+        for (ISingleResult result : getResultListResolveStruct(left)) {
             this.envs.push(envs.nested(result, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult right = stack.pop();
@@ -129,7 +129,7 @@ public class Interpreter implements IInterpreter {
         expr.getLeftExpression().accept(this);
         IAbstractQueryResult left = stack.pop();
 
-        for (ISingleResult result : getResultList(left)) {
+        for (ISingleResult result : getResultListResolveStruct(left)) {
             this.envs.push(envs.nested(result, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult right = stack.pop();
@@ -162,11 +162,11 @@ public class Interpreter implements IInterpreter {
         expr.getLeftExpression().accept(this);
         IAbstractQueryResult left = stack.pop();
 
-        for (ISingleResult el1 : getResultList(left)) {
+        for (ISingleResult el1 : getResultListResolveStruct(left)) {
             this.envs.push(envs.nested(el1, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult right = stack.pop();
-            for (ISingleResult el2 : getResultList(right)) {
+            for (ISingleResult el2 : getResultListResolveStruct(right)) {
                 StructResult struct = new StructResult();
                 struct.elements().add(el1);
                 if (el2 instanceof IStructResult) {
@@ -191,9 +191,8 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult e2Res = stack.pop();
         IAbstractQueryResult e1Res = stack.pop();
 
-        //TODO coerceToBag, coerceToStruct
-        for (ISingleResult e1 : getResultList(e1Res)) {
-            for (ISingleResult e2 : getResultList(e2Res)) {
+        for (ISingleResult e1 : getResultListNotResolveStruct(e1Res)) {
+            for (ISingleResult e2 : getResultListNotResolveStruct(e2Res)) {
                 List<ISingleResult> struct = new ArrayList<ISingleResult>();
                 if (e1 instanceof IStructResult) {
                     struct.addAll(((IStructResult) e1).elements());
@@ -272,7 +271,7 @@ public class Interpreter implements IInterpreter {
         expr.getLeftExpression().accept(this);
         IAbstractQueryResult leftResult = stack.pop();
 
-        for (ISingleResult result : getResultList(leftResult)) {
+        for (ISingleResult result : getResultListResolveStruct(leftResult)) {
             this.envs.push(envs.nested(result, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult rightResult = stack.pop();
@@ -426,8 +425,8 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult left = stack.pop();
         right = doDereference(right);
         left = doDereference(left);
-        List<ISingleResult> rightList = getResultList(right);
-        List<ISingleResult> leftList = getResultList(left);
+        List<ISingleResult> rightList = getResultListResolveStruct(right);
+        List<ISingleResult> leftList = getResultListResolveStruct(left);
         // (1,2) intersect (1,2)
         if (leftList.containsAll(rightList)) {
             stack.push(new BooleanResult(true));
@@ -445,8 +444,8 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult left = stack.pop();
         right = doDereference(right);
         left = doDereference(left);
-        List<ISingleResult> rightList = getResultList(right);
-        List<ISingleResult> leftList = getResultList(left);
+        List<ISingleResult> rightList = getResultListResolveStruct(right);
+        List<ISingleResult> leftList = getResultListResolveStruct(left);
 
         leftList.retainAll(rightList);
 
@@ -461,11 +460,11 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult left = stack.pop();
 
         // dwa rozwiniecia
-        for (ISingleResult el1 : getResultList(left)) {
+        for (ISingleResult el1 : getResultListResolveStruct(left)) {
             this.envs.push(envs.nested(el1, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult right = stack.pop();
-            for (ISingleResult el2 : getResultList(right)) {
+            for (ISingleResult el2 : getResultListResolveStruct(right)) {
                 StructResult struct = new StructResult();
                 struct.elements().add(el1);
                 if (el2 instanceof IStructResult) {
@@ -645,8 +644,8 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult left = stack.pop();
         right = doDereference(right);
         left = doDereference(left);
-        List<ISingleResult> rightList = getResultList(right);
-        List<ISingleResult> leftList = getResultList(left);
+        List<ISingleResult> rightList = getResultListResolveStruct(right);
+        List<ISingleResult> leftList = getResultListResolveStruct(left);
 
         leftList.removeAll(rightList);
 
@@ -856,8 +855,8 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
 
-        eres.getElements().addAll(getResultList(left));
-        eres.getElements().addAll(getResultList(right));
+        eres.getElements().addAll(getResultListNotResolveStruct(left));
+        eres.getElements().addAll(getResultListNotResolveStruct(right));
         stack.push(eres);
     }
 
@@ -867,7 +866,7 @@ public class Interpreter implements IInterpreter {
         expr.getLeftExpression().accept(this);
         IAbstractQueryResult left = stack.pop();
 
-        for (ISingleResult result : getResultList(left)) {
+        for (ISingleResult result : getResultListResolveStruct(left)) {
             this.envs.push(envs.nested(result, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult right = stack.pop();
@@ -962,7 +961,7 @@ public class Interpreter implements IInterpreter {
 
         IAbstractQueryResult result = stack.pop();
 
-        eres.getElements().addAll(getResultList(result));
+        eres.getElements().addAll(getResultListResolveStruct(result));
 
         stack.push(eres);
     }
@@ -972,7 +971,7 @@ public class Interpreter implements IInterpreter {
         expr.getInnerExpression().accept(this);
 
         IAbstractQueryResult result = stack.pop();
-        List<ISingleResult> eres = getResultList(result);
+        List<ISingleResult> eres = getResultListNotResolveStruct(result);
 
         stack.push(new IntegerResult(eres.size()));
     }
@@ -983,7 +982,7 @@ public class Interpreter implements IInterpreter {
 
         IAbstractQueryResult result = stack.pop();
 
-        List<ISingleResult> list = getResultList(result);
+        List<ISingleResult> list = getResultListNotResolveStruct(result);
         if (list.size() > 0) {
             stack.push(new BooleanResult(true));
         } else {
@@ -996,7 +995,7 @@ public class Interpreter implements IInterpreter {
         expr.getInnerExpression().accept(this);
 
         IAbstractQueryResult result = stack.pop();
-        List<ISingleResult> eres = getResultList(result);
+        List<ISingleResult> eres = getResultListResolveStruct(result);
 
         if (0 == eres.size()) {
             throw new RuntimeException("Empty collection!");
@@ -1037,7 +1036,7 @@ public class Interpreter implements IInterpreter {
         expr.getInnerExpression().accept(this);
 
         IAbstractQueryResult result = stack.pop();
-        List<ISingleResult> eres = getResultList(result);
+        List<ISingleResult> eres = getResultListResolveStruct(result);
 
         if (0 == eres.size()) {
             throw new RuntimeException("Empty collection!");
@@ -1101,7 +1100,7 @@ public class Interpreter implements IInterpreter {
         if (res instanceof IStructResult) {
             stack.push(res);
         } else {
-            stack.push(new StructResult(getResultList(res)));
+            stack.push(new StructResult(getResultListResolveStruct(res)));
         }
     }
 
@@ -1110,7 +1109,7 @@ public class Interpreter implements IInterpreter {
         expr.getInnerExpression().accept(this);
 
         IAbstractQueryResult result = stack.pop();
-        List<ISingleResult> eres = getResultList(result);
+        List<ISingleResult> eres = getResultListResolveStruct(result);
 
         boolean isDoubleInstance = false;
         Double sum = 0.0;
@@ -1141,7 +1140,7 @@ public class Interpreter implements IInterpreter {
 
         IAbstractQueryResult result = stack.pop();
 
-        List<ISingleResult> uniqueList = new ArrayList<ISingleResult>(new LinkedHashSet<ISingleResult>(getResultList(result)));
+        List<ISingleResult> uniqueList = new ArrayList<ISingleResult>(new LinkedHashSet<ISingleResult>(getResultListResolveStruct(result)));
 
         stack.push(new BagResult(uniqueList));
     }
@@ -1151,7 +1150,7 @@ public class Interpreter implements IInterpreter {
         expr.getInnerExpression().accept(this);
 
         IAbstractQueryResult result = stack.pop();
-        List<ISingleResult> eres = getResultList(result);
+        List<ISingleResult> eres = getResultListResolveStruct(result);
 
         if (eres.size() == 0) {
             stack.push(new DoubleResult(0.0));
@@ -1223,12 +1222,9 @@ public class Interpreter implements IInterpreter {
         throw new WrongTypeException();
     }
 
-    private List<ISingleResult> getResultList(IAbstractQueryResult result) {
+    private List<ISingleResult> getResultListResolveStruct(IAbstractQueryResult result) {
         List<ISingleResult> results = new ArrayList<ISingleResult>();
-         // (1,2).ala
 
-        // coerceToBag
-        // coerceToStruct
         if (result instanceof ISingleResult) {
             if (result instanceof IStructResult) {
                 results.addAll(((IStructResult) result).elements());
@@ -1253,6 +1249,30 @@ public class Interpreter implements IInterpreter {
                     results.addAll(((IStructResult) singleResult).elements());
                 } else {
                     results.add(singleResult);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    private List<ISingleResult> getResultListNotResolveStruct(IAbstractQueryResult result) {
+        List<ISingleResult> results = new ArrayList<ISingleResult>();
+
+        if (result instanceof ISingleResult) {
+            results.add((SingleResult) result);
+        }
+
+        if (result instanceof IBagResult) {
+            for (ISingleResult singleResult : ((IBagResult) result).getElements()) {
+                results.add(singleResult);
+            }
+        }
+
+        if (result instanceof ISequenceResult) {
+            for (ISingleResult singleResult : ((ISequenceResult) result).getElements()) {
+                if (singleResult instanceof IStructResult) {
+                    results.addAll(((IStructResult) singleResult).elements());
                 }
             }
         }
