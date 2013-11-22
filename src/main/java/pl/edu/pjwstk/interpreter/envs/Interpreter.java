@@ -440,8 +440,6 @@ public class Interpreter implements IInterpreter {
 
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
-        right = doDereference(right);
-        left = doDereference(left);
         List<ISingleResult> rightList = getResultListResolveStruct(right);
         List<ISingleResult> leftList = getResultListResolveStruct(left);
 
@@ -648,8 +646,7 @@ public class Interpreter implements IInterpreter {
 
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
-        right = doDereference(right);
-        left = doDereference(left);
+
         List<ISingleResult> rightList = getResultListResolveStruct(right);
         List<ISingleResult> leftList = getResultListResolveStruct(left);
 
