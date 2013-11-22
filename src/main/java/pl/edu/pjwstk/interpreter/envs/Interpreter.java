@@ -275,8 +275,7 @@ public class Interpreter implements IInterpreter {
             this.envs.push(envs.nested(result, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult rightResult = stack.pop();
-            // koercja do baga, bag do resultatu
-            bag.getElements().add((IStructResult) rightResult);
+            bag.getElements().add(getResult(rightResult));
             envs.pop();
         }
 
@@ -499,7 +498,9 @@ public class Interpreter implements IInterpreter {
         right = doDereference(right);
 
         if (right.getClass() != left.getClass()) {
-            throw new RuntimeException("Cannot compare two different instances");
+            //throw new RuntimeException("Cannot compare two different instances");
+            stack.push(new BooleanResult(false));
+            return;
         }
 
         if (left instanceof IStringResult && right instanceof IStringResult) {
@@ -554,7 +555,9 @@ public class Interpreter implements IInterpreter {
         right = doDereference(right);
 
         if (right.getClass() != left.getClass()) {
-            throw new RuntimeException("Cannot compare two different instances");
+            //throw new RuntimeException("Cannot compare two different instances");
+            stack.push(new BooleanResult(false));
+            return;
         }
 
         if (left instanceof IStringResult && right instanceof IStringResult) {
@@ -810,7 +813,9 @@ public class Interpreter implements IInterpreter {
         right = doDereference(right);
 
         if (!(left instanceof IBooleanResult && right instanceof IBooleanResult)) {
-            throw new WrongTypeException("Only Boolean is allowed");
+            // throw new WrongTypeException("Only Boolean is allowed");
+            stack.push(new BooleanResult(false));
+            return;
         }
 
         stack.push(new BooleanResult(((IBooleanResult) left).getValue() || ((IBooleanResult) right).getValue()));
@@ -835,7 +840,7 @@ public class Interpreter implements IInterpreter {
         right = doDereference(right);
 
         if (left instanceof IStringResult || right instanceof IStringResult) {
-            stack.push(new StringResult(((IStringResult) left).getValue() + ((IStringResult) right).getValue()));
+            stack.push(new StringResult(getString((ISingleResult) left) + getString((ISingleResult) right)));
 
             return;
         }
@@ -1337,5 +1342,31 @@ public class Interpreter implements IInterpreter {
 
         return singleResult;
 
+    }
+
+    private String getString(final ISingleResult result) {
+        if (result instanceof IStringResult) {
+            return ((IStringResult) result).getValue();
+        } else if (result instanceof ISimpleResult) {
+            return ((ISimpleResult) result).getValue().toString();
+        } else if (result instanceof IStructResult) {
+            try {
+                return getString(getResult(result));
+            } catch (WrongTypeException e) {
+                return "[WrongTypeException in getString]";
+            }
+        } else if (result instanceof IReferenceResult) {
+            IOID oid = ((IReferenceResult) result).getOIDValue();
+            return oid.toString();
+        } else if (result instanceof IBinderResult) {
+            IBinderResult binder = (IBinderResult) result;
+            try {
+                return getString(getResult(binder.getValue())) + " as " + binder.getName();
+            } catch (WrongTypeException e) {
+                return "[WrongTypeException in getString]";
+            }
+        }
+
+        return "[I have no idea whats up]";
     }
 }
