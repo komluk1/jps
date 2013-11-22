@@ -34,8 +34,6 @@ public class TestCw7 {
         URL url = TestCw7.class.getClassLoader().getResource("TestCw7_dane.xml");
         store = new SBAStore();
         store.loadXML(url.getPath());
-        stack = new QresStack();
-        interpreter = new Interpreter(stack, store, new ENVS());
     }
     private static final String[] queries = {
             "booleanValue as wartoscNazwana",
@@ -338,6 +336,8 @@ public class TestCw7 {
 
     public static void main(String[] args) {
         for (int i=0; i<queries.length;i++){
+            stack = new QresStack();
+            interpreter = new Interpreter(stack, store, new ENVS());
             String query = queries[i];
             String out = query + " -> ";
             ParserCup cup = new ParserCup(query);

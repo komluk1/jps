@@ -31,9 +31,8 @@ public class BinderResult extends SingleResult implements IBinderResult {
     }
 
     public String toString() {
-        return "BinderResult{" +
-                "name=" + getName() +
-                ", value=" + getValue() +
-                '}';
+        return "<" + getName() +
+                "," + getValue() +
+                '>';
     }
 }

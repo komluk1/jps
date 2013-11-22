@@ -321,10 +321,10 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         right = doDereference(right);
 
-        if (right.getClass() != left.getClass()) {
+   /*     if (right.getClass() != left.getClass()) {
             throw new RuntimeException("Cannot compare two different instances");
         }
-
+*/
         if (left instanceof IStringResult && right instanceof IStringResult) {
             int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
 
@@ -347,15 +347,16 @@ public class Interpreter implements IInterpreter {
             return;
         }
 
-        if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
-            int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
-
+        if ((left instanceof IDoubleResult  || left instanceof IIntegerResult) && (right instanceof IIntegerResult  || right instanceof IDoubleResult)) {
+            int result = new Double(((Number)((ISimpleResult) left).getValue()).doubleValue()).compareTo(new Double(((Number)((ISimpleResult) right).getValue()).doubleValue()));
             if (result > 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
             }
+            return;
         }
+        stack.push(new BooleanResult(false));
     }
 
     @Override
@@ -376,9 +377,9 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         right = doDereference(right);
 
-        if (right.getClass() != left.getClass()) {
+       /* if (right.getClass() != left.getClass()) {
             throw new RuntimeException("Cannot compare two different instances");
-        }
+        }*/
 
         if (left instanceof IStringResult && right instanceof IStringResult) {
             int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
@@ -402,14 +403,15 @@ public class Interpreter implements IInterpreter {
             return;
         }
 
-        if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
-            int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
+        if ((left instanceof IDoubleResult  || left instanceof IIntegerResult) && (right instanceof IIntegerResult  || right instanceof IDoubleResult)) {
+            int result = new Double(((Number)((ISimpleResult) left).getValue()).doubleValue()).compareTo(new Double(((Number)((ISimpleResult) right).getValue()).doubleValue()));
 
             if (result >= 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
             }
+            return;
         }
 
         stack.push(new BooleanResult(false));
@@ -422,12 +424,9 @@ public class Interpreter implements IInterpreter {
 
         IAbstractQueryResult right = stack.pop();
         IAbstractQueryResult left = stack.pop();
-        right = doDereference(right);
-        left = doDereference(left);
         List<ISingleResult> rightList = getResultListResolveStruct(right);
         List<ISingleResult> leftList = getResultListResolveStruct(left);
-        // (1,2) intersect (1,2)
-        if (leftList.containsAll(rightList)) {
+        if (rightList.containsAll(leftList)) {
             stack.push(new BooleanResult(true));
         } else {
             stack.push(new BooleanResult(false));
@@ -497,11 +496,11 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         right = doDereference(right);
 
-        if (right.getClass() != left.getClass()) {
+    /*    if (right.getClass() != left.getClass()) {
             //throw new RuntimeException("Cannot compare two different instances");
             stack.push(new BooleanResult(false));
             return;
-        }
+        }*/
 
         if (left instanceof IStringResult && right instanceof IStringResult) {
             int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
@@ -525,15 +524,17 @@ public class Interpreter implements IInterpreter {
             return;
         }
 
-        if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
-            int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
+        if ((left instanceof IDoubleResult  || left instanceof IIntegerResult) && (right instanceof IIntegerResult  || right instanceof IDoubleResult)) {
+            int result = new Double(((Number)((ISimpleResult) left).getValue()).doubleValue()).compareTo(new Double(((Number)((ISimpleResult) right).getValue()).doubleValue()));
 
             if (result <= 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
             }
+            return;
         }
+        stack.push(new BooleanResult(false));
     }
 
     @Override
@@ -553,12 +554,12 @@ public class Interpreter implements IInterpreter {
 
         left = doDereference(left);
         right = doDereference(right);
-
+/*
         if (right.getClass() != left.getClass()) {
             //throw new RuntimeException("Cannot compare two different instances");
             stack.push(new BooleanResult(false));
             return;
-        }
+        }*/
 
         if (left instanceof IStringResult && right instanceof IStringResult) {
             int result = ((IStringResult) left).getValue().compareTo(((IStringResult) right).getValue());
@@ -582,15 +583,17 @@ public class Interpreter implements IInterpreter {
             return;
         }
 
-        if (left instanceof IDoubleResult && right instanceof IDoubleResult) {
-            int result = ((IDoubleResult) left).getValue().compareTo(((IDoubleResult) right).getValue());
+        if ((left instanceof IDoubleResult  || left instanceof IIntegerResult) && (right instanceof IIntegerResult  || right instanceof IDoubleResult)) {
+            int result = new Double(((Number)((ISimpleResult) left).getValue()).doubleValue()).compareTo(new Double(((Number)((ISimpleResult) right).getValue()).doubleValue()));
 
             if (result < 0) {
                 stack.push(new BooleanResult(true));
             } else {
                 stack.push(new BooleanResult(false));
             }
+            return;
         }
+        stack.push(new BooleanResult(false));
     }
 
     @Override
