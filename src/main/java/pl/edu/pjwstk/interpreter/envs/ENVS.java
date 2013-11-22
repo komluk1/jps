@@ -73,6 +73,8 @@ public class ENVS implements IENVS {
             for (IENVSBinder ienvsBinder: ienvsBinders){
                 if (name.equals(ienvsBinder.getName())){
                     singleResults.add((ISingleResult)ienvsBinder.getValue());
+
+                    //Signle czy collection
                 }
             }
         }

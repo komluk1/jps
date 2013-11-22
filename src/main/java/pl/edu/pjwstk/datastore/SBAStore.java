@@ -79,7 +79,9 @@ public class SBAStore implements ISBAStore {
         }  else if (o instanceof Float){
             isbaObject = new DoubleObject(objectName,((Float)o).doubleValue());
         } else if (o instanceof Collection) {
+            //rekurencja dla kazdego
             isbaObject = getComplexObject(objectName,(Collection) o);
+
         }  else if (o instanceof Map){
             isbaObject = getComplexObject(objectName,(Map)o);
         }

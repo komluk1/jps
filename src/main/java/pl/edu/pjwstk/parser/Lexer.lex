@@ -43,7 +43,7 @@ WHITESPACE = [ \t\r\n\v\f]+
 LineTerminator = \r|\n|\r\n 
 WHITESPACE = {LineTerminator} | [ \t\f]
 
-%state IDENTIFIER
+%state IDENTIFIER13
 %%
 <YYINITIAL> {
         "+"                                             { return createToken(PLUS); }
@@ -136,11 +136,11 @@ WHITESPACE = {LineTerminator} | [ \t\f]
                 return createToken(BOOLEAN_LITERAL, new Boolean(val));
         }
         {IDENTIFIER} {
-                                Symbol t = createToken(IDENTIFIER);
+                                Symbol t = createToken(IDENTIFIER,yytext());
                                 return t;
                         }
         {SPEC_IDENTIFIER} {
-                Symbol t = createToken(IDENTIFIER);
+                Symbol t = createToken(IDENTIFIER,yytext());
                 return t;
         }
 }

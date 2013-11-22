@@ -191,6 +191,7 @@ public class Interpreter implements IInterpreter {
         IAbstractQueryResult e2Res = stack.pop();
         IAbstractQueryResult e1Res = stack.pop();
 
+        //TODO coerceToBag, coerceToStruct
         for (ISingleResult e1 : getResultList(e1Res)) {
             for (ISingleResult e2 : getResultList(e2Res)) {
                 List<ISingleResult> struct = new ArrayList<ISingleResult>();
@@ -275,6 +276,7 @@ public class Interpreter implements IInterpreter {
             this.envs.push(envs.nested(result, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult rightResult = stack.pop();
+            // koercja do baga, bag do resultatu
             bag.getElements().add((IStructResult) rightResult);
             envs.pop();
         }
@@ -426,7 +428,7 @@ public class Interpreter implements IInterpreter {
         left = doDereference(left);
         List<ISingleResult> rightList = getResultList(right);
         List<ISingleResult> leftList = getResultList(left);
-
+        // (1,2) intersect (1,2)
         if (leftList.containsAll(rightList)) {
             stack.push(new BooleanResult(true));
         } else {
@@ -458,6 +460,7 @@ public class Interpreter implements IInterpreter {
         expr.getLeftExpression().accept(this);
         IAbstractQueryResult left = stack.pop();
 
+        // dwa rozwiniecia
         for (ISingleResult el1 : getResultList(left)) {
             this.envs.push(envs.nested(el1, this.store));
             expr.getRightExpression().accept(this);
@@ -942,7 +945,8 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public void visitNameTerminal(INameTerminal expr) {
-        stack.push(new BinderResult(expr.getName(), this.envs.bind(expr.getName())));
+        //stack.push(new BinderResult(expr.getName(), this.envs.bind(expr.getName())));
+        stack.push(this.envs.bind(expr.getName()));
     }
 
     @Override
@@ -1221,7 +1225,10 @@ public class Interpreter implements IInterpreter {
 
     private List<ISingleResult> getResultList(IAbstractQueryResult result) {
         List<ISingleResult> results = new ArrayList<ISingleResult>();
+         // (1,2).ala
 
+        // coerceToBag
+        // coerceToStruct
         if (result instanceof ISingleResult) {
             if (result instanceof IStructResult) {
                 results.addAll(((IStructResult) result).elements());

@@ -1,5 +1,6 @@
 <root>
 	<integerNumber>10</integerNumber>
+    <booleanValue>false</booleanValue>
     <emp>
         <number>s0000</number>
         <fName>Anna</fName>
