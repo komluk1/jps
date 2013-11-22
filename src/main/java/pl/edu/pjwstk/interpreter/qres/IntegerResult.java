@@ -24,6 +24,7 @@ public class IntegerResult extends SimpleResult<Integer> implements IIntegerResu
     }
 
     public boolean equals(Object o) {
-        return o == this || o instanceof IntegerResult && (((IntegerResult) o).getValue().equals(this.getValue()));
+        boolean out =  ((o == this) || ( (o instanceof IntegerResult) && (((IntegerResult) o).getValue().equals(this.getValue()))));
+        return out;
     }
 }

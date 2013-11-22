@@ -30,7 +30,13 @@ public class SimpleResult<T> extends SingleResult implements ISimpleResult<T> {
         return "" + value;
     }
 
+
+    @Override
+    public int hashCode() {
+        return value != null ? value.hashCode() : 0;
+    }
+
     public boolean equals(Object o) {
-        return this == o;
+        return o instanceof SimpleResult && this.value.equals(((SimpleResult)o).getValue());
     }
 }
