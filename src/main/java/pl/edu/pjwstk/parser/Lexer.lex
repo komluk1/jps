@@ -62,6 +62,7 @@ WHITESPACE = {LineTerminator} | [ \t\f]
         ">"                                             { return createToken(MORE); }
         "OR"|"or"|"\|\|"                                { return createToken(OR); }
         "AND"|"and"|"&&"                                { return createToken(AND); }
+        "XOR"|"xor"|"^^"                                { return createToken(XOR); }
         "SUM"|"sum"                                     { return createToken(SUM); }
         "AVG"|"avg"                                     { return createToken(AVG); }
         "UNIQUE"|"unique"                               { return createToken(UNIQUE); }
@@ -76,6 +77,7 @@ WHITESPACE = {LineTerminator} | [ \t\f]
         ".."                                            { return createToken(RANGE); }
         "."                                             { return createToken(DOT); }
         "<"                                             { return createToken(LESS); }
+        ">"                                            { return createToken(MORE); }
         ">="                                            { return createToken(MORE_OR_EQUAL); }
         "<="                                            { return createToken(LESS_OR_EQUAL); }
         ","                                             { return createToken(COMA); }

@@ -38,6 +38,7 @@ public class TestCw7 {
         interpreter = new Interpreter(stack, store, new ENVS());
     }
     private static final String[] queries = {
+            "booleanValue as wartoscNazwana",
             "all 1 true",
             "all (bag(1, bag(2,3) group as wew) as num) (num == 2)",
             "all emp married",
@@ -172,6 +173,7 @@ public class TestCw7 {
 
 
     private static final String[] resultsShouldBe ={
+            "binder",
             "TRUE",
             "FALSE",
             "TRUE",
@@ -305,23 +307,25 @@ public class TestCw7 {
 };
 
     public static String toString(IAbstractQueryResult abstractQueryResult) {
-        String out = "";
+
         if (abstractQueryResult instanceof IBagResult){
+            String out = "bag(";
             String comma ="";
             for ( ISingleResult singleResult : ((IBagResult) abstractQueryResult).getElements()){
                 out += comma + toString(singleResult);
                 comma=",";
             }
 
-            return out;
+            return out+")";
         } else if (abstractQueryResult instanceof ISequenceResult){
+            String out = "sequence(";
             String comma ="";
             for ( ISingleResult singleResult : ((ISequenceResult) abstractQueryResult).getElements()){
                 out += comma + toString(singleResult);
                 comma=",";
             }
 
-            return out;
+            return out+")";
         }   else if (abstractQueryResult instanceof IReferenceResult) {
             ISBAObject o = store.retrieve(((IReferenceResult)abstractQueryResult).getOIDValue());
             return "ref("+o.toString()+")";
@@ -347,7 +351,7 @@ public class TestCw7 {
             } catch (Throwable e) {
                 out+=" EXCEPTION "+e.getLocalizedMessage();
                 synchronized (TestCw7.class){
-                    e.printStackTrace();
+                   e.printStackTrace();
                 }
             }
             synchronized (TestCw7.class){
