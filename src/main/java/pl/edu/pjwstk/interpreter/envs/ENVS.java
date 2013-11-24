@@ -72,9 +72,15 @@ public class ENVS implements IENVS {
             Collection<IENVSBinder> ienvsBinders = ienvsFrame.getElements();
             for (IENVSBinder ienvsBinder: ienvsBinders){
                 if (name.equals(ienvsBinder.getName())){
-                    singleResults.add((ISingleResult)ienvsBinder.getValue());
 
-                    //Signle czy collection
+                    IAbstractQueryResult result = ienvsBinder.getValue();
+                    if (result instanceof ISingleResult){
+                        singleResults.add((ISingleResult)result);
+                    } else if (result instanceof IBagResult){
+                        singleResults.addAll(((IBagResult) result).getElements());
+                    } else if (result instanceof ISequenceResult){
+                        singleResults.addAll(((ISequenceResult) result).getElements());
+                    }
                 }
             }
         }
@@ -84,15 +90,6 @@ public class ENVS implements IENVS {
     @Override
     public IENVSFrame nested(IAbstractQueryResult result, ISBAStore store) {
         List<IENVSBinder> envsBinders = new ArrayList<IENVSBinder>();
-        if (result instanceof IBagResult){
-            for (ISingleResult singleResult:  ((IBagResult) result).getElements()){
-                envsBinders.addAll(nested(singleResult,store).getElements());
-            }
-        } else if (result instanceof ISequenceResult){
-            for (ISingleResult singleResult:  ((ISequenceResult) result).getElements()){
-                envsBinders.addAll(nested(singleResult,store).getElements());
-            }
-        }
         if (result instanceof IStructResult){
             for (ISingleResult singleResult:  ((IStructResult) result).elements()){
                 envsBinders.addAll(nested(singleResult,store).getElements());

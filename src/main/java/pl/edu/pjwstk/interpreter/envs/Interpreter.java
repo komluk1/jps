@@ -271,7 +271,7 @@ public class Interpreter implements IInterpreter {
         expr.getLeftExpression().accept(this);
         IAbstractQueryResult leftResult = stack.pop();
 
-        for (ISingleResult result : getResultListResolveStruct(leftResult)) {
+        for (ISingleResult result : getResultListNotResolveStruct(leftResult)) {
             this.envs.push(envs.nested(result, this.store));
             expr.getRightExpression().accept(this);
             IAbstractQueryResult rightResult = stack.pop();
