@@ -83,12 +83,13 @@
           <version>1.8.3</version>
       </dependency>
 
- <!--     <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-oxm</artifactId>
-          <version>3.2.4.RELEASE</version>
+      <dependency>
+          <groupId>edu.pjwstk</groupId>
+          <artifactId>jps-api</artifactId>
+          <version>1.0.4</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/jps-api_1.0.4.jar</systemPath>
       </dependency>
--->
 
       <dependency>
           <groupId>org.apache.commons</groupId>
